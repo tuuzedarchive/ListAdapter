@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='io.github.tuuzed'
+group='com.github.tuuzed'
 
 android {
     compileSdkVersion 25
