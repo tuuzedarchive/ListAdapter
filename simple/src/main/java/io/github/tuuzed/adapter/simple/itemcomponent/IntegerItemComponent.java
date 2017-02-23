@@ -19,13 +19,13 @@ import io.github.tuuzed.adapter.simple.R;
 public class IntegerItemComponent implements ItemComponent<Integer, IntegerItemComponent.ViewHolder> {
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, Integer integer) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Integer integer) {
         holder.textView.setText("Integer =>" + integer);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
         return new IntegerItemComponent.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_integer, parent, false));
     }
 

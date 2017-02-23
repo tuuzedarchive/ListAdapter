@@ -10,18 +10,18 @@ import java.util.Map;
  */
 
 class ItemComponentPool {
-    private Map<String, ItemComponent> mItemComponentPool;
+    private Map<Class, ItemComponent> mItemComponentPool;
 
     ItemComponentPool() {
         mItemComponentPool = new HashMap<>();
     }
 
     ItemComponent getItemComponent(Class key) {
-        return mItemComponentPool.get(key.getName());
+        return mItemComponentPool.get(key);
     }
 
     void putItemComponent(Class key, ItemComponent itemComponent) {
-        mItemComponentPool.put(key.getName(), itemComponent);
+        mItemComponentPool.put(key, itemComponent);
     }
 
 }

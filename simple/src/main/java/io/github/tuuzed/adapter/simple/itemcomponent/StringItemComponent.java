@@ -15,13 +15,13 @@ public class StringItemComponent implements ItemComponent<String, StringItemComp
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, String s) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull String s) {
         holder.textView.setText("String => " + s);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_string, parent, false));
     }
 
