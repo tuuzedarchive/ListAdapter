@@ -14,14 +14,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Items mItems;
     private ItemComponentPool mItemComponentPool;
 
+    public void register(@NonNull Class clazz, @NonNull ItemComponent itemView) {
+        mItemComponentPool.putItemComponent(clazz, itemView);
+    }
 
     public RecyclerViewAdapter(@NonNull Items items) {
         this.mItems = items;
         mItemComponentPool = new ItemComponentPool();
-    }
-
-    public void register(@NonNull Class clazz, @NonNull ItemComponent itemView) {
-        mItemComponentPool.putItemComponent(clazz, itemView);
     }
 
     @Override
@@ -31,24 +30,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Object item = mItems.get(viewType);
-        ItemComponent itemComponent = mItemComponentPool.getItemComponent(item.getClass());
+        ItemComponent itemComponent = mItemComponentPool.getItemComponent(mItems.get(viewType).getClass());
         if (itemComponent != null) {
             return itemComponent.onCreateViewHolder(parent);
-        } else {
-            throw new ItemComponentNotFoundException(item.getClass());
         }
+        throw new NotFindItemComponent();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Object item = mItems.get(position);
         ItemComponent itemComponent = mItemComponentPool.getItemComponent(item.getClass());
         if (itemComponent != null) {
-            itemComponent.onBindViewHolder(holder, item);
+            itemComponent.onBindViewHolder(holder, item, position);
         } else {
-            throw new ItemComponentNotFoundException(item.getClass());
+            throw new NotFindItemComponent();
         }
     }
 

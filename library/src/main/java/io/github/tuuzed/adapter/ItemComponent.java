@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 
 public interface ItemComponent<T, VH extends RecyclerView.ViewHolder> {
 
-
-    void onBindViewHolder(@NonNull VH holder, @NonNull T t);
+    void onBindViewHolder(VH holder, T item, int position);
 
     @NonNull
-    VH onCreateViewHolder(@NonNull ViewGroup parent);
+    VH onCreateViewHolder(ViewGroup parent);
 
 }

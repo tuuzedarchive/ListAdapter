@@ -19,13 +19,14 @@ import io.github.tuuzed.adapter.simple.R;
 public class LongItemComponent implements ItemComponent<Long, LongItemComponent.ViewHolder> {
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Long aLong) {
-        holder.textView.setText("Long => " + aLong);
+    public void onBindViewHolder(ViewHolder holder, Long item, int position) {
+        holder.textView.setText("Long => " + item);
+
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent) {
         return new LongItemComponent.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_long, parent, false));
     }
 
