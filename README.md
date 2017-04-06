@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/TuuZed/Adapter.svg)](https://jitpack.io/#TuuZed/Adapter)
 ## 如何添加该开源库
 ### 添加JitPack仓库
 在当前项目的根目录下的 `build.gradle` 文件中添加如下内容:
@@ -44,7 +45,7 @@ public class StringItemProvider extends ItemProvider<String, StringItemProvider.
 }
 
 ```
-### 实例化RecyclerViewAdapter并注册ItemComponent
+### 实例化RecyclerViewAdapter并注册ItemProvider
 ```java
 Items items = new Items();
 RecyclerViewAdapter adapter = new RecyclerViewAdapter(items);
