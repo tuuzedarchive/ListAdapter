@@ -1,4 +1,4 @@
-package io.github.tuuzed.adapter.simple.itemcomponent;
+package io.github.tuuzed.adapter.simple.provider;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import io.github.tuuzed.adapter.ItemComponent;
+import io.github.tuuzed.adapter.ItemProvider;
 import io.github.tuuzed.adapter.simple.R;
 
 
-public class StringItemComponent implements ItemComponent<String, StringItemComponent.ViewHolder> {
+public class StringItemProvider extends ItemProvider<String, StringItemProvider.ViewHolder> {
 
 
     @Override
@@ -21,10 +21,9 @@ public class StringItemComponent implements ItemComponent<String, StringItemComp
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_string, parent, false));
+    public ViewHolder onCreateViewHolder(ViewGroup parent, LayoutInflater inflater) {
+        return new StringItemProvider.ViewHolder(inflater.inflate(R.layout.item_string, parent, false));
     }
-
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;

@@ -7,6 +7,5 @@ import java.util.ArrayList;
  *
  * @author LYH
  */
-
 public class Items extends ArrayList<Object> {
 }

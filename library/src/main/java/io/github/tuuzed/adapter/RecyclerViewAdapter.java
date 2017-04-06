@@ -2,25 +2,28 @@ package io.github.tuuzed.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LYH on 2017/2/22.
  *
  * @author LYH
  */
-
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Items mItems;
-    private ItemComponentPool mItemComponentPool;
+    private Map<Class, ItemProvider> mPool;
 
-    public void register(@NonNull Class clazz, @NonNull ItemComponent itemView) {
-        mItemComponentPool.putItemComponent(clazz, itemView);
+    public void register(@NonNull Class clazz, @NonNull ItemProvider provider) {
+        mPool.put(clazz, provider);
     }
 
     public RecyclerViewAdapter(@NonNull Items items) {
-        this.mItems = items;
-        mItemComponentPool = new ItemComponentPool();
+        mItems = items;
+        mPool = new HashMap<>();
     }
 
     @Override
@@ -30,21 +33,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemComponent itemComponent = mItemComponentPool.getItemComponent(mItems.get(viewType).getClass());
-        if (itemComponent != null) {
-            return itemComponent.onCreateViewHolder(parent);
+        ItemProvider itemView = mPool.get(mItems.get(viewType).getClass());
+        if (itemView == null) {
+            throw new NotFindItemProvider();
         }
-        throw new NotFindItemComponent();
+        itemView.context = parent.getContext();
+        return itemView.onCreateViewHolder(parent, LayoutInflater.from(parent.getContext()));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Object item = mItems.get(position);
-        ItemComponent itemComponent = mItemComponentPool.getItemComponent(item.getClass());
-        if (itemComponent != null) {
-            itemComponent.onBindViewHolder(holder, item, position);
+        ItemProvider itemView = mPool.get(item.getClass());
+        if (itemView == null) {
+            throw new NotFindItemProvider();
         } else {
-            throw new NotFindItemComponent();
+            itemView.onBindViewHolder(holder, item, position);
         }
     }
 

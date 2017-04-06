@@ -1,4 +1,4 @@
-package io.github.tuuzed.adapter.simple.itemcomponent;
+package io.github.tuuzed.adapter.simple.provider;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import io.github.tuuzed.adapter.ItemComponent;
+import io.github.tuuzed.adapter.ItemProvider;
 import io.github.tuuzed.adapter.simple.R;
 
 /**
@@ -15,20 +15,18 @@ import io.github.tuuzed.adapter.simple.R;
  *
  * @author LYH
  */
-
-public class IntegerItemComponent implements ItemComponent<Integer, IntegerItemComponent.ViewHolder> {
-
+public class IntegerItemProvider extends ItemProvider<Integer, IntegerItemProvider.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, Integer item, int position) {
         holder.textView.setText("Integer =>" + item);
-
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new IntegerItemComponent.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_integer, parent, false));
+    public ViewHolder onCreateViewHolder(ViewGroup parent, LayoutInflater inflater) {
+        View view = inflater.inflate(R.layout.item_integer, parent, false);
+        return new IntegerItemProvider.ViewHolder(view);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -4,7 +4,6 @@
 ```groovy
 allprojects {
     repositories {
-        ...
         maven { url "https://jitpack.io" }
     }
 }
@@ -18,8 +17,8 @@ dependencies {
 ## 如何使用
 ### 新建一个类实现ItemComponent接口
 ```java
-// StringItemComponent.java
-public class StringItemComponent implements ItemComponent<String, StringItemComponent.ViewHolder> {
+// StringItemProvider.java
+public class StringItemProvider extends ItemProvider<String, StringItemProvider.ViewHolder> {
 
 
     @Override
@@ -29,12 +28,9 @@ public class StringItemComponent implements ItemComponent<String, StringItemComp
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_string, parent, false);
-        return new ViewHolder(view);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, LayoutInflater inflater) {
+        return new StringItemProvider.ViewHolder(inflater.inflate(R.layout.item_string, parent, false));
     }
-
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -51,8 +47,8 @@ public class StringItemComponent implements ItemComponent<String, StringItemComp
 ### 实例化RecyclerViewAdapter并注册ItemComponent
 ```java
 Items items = new Items();
-RecyclerViewAdapter adapter = new RecyclerViewAdapter(item);
-adapter.register(String.class, new StringItemComponent());
+RecyclerViewAdapter adapter = new RecyclerViewAdapter(items);
+adapter.register(String.class, new StringItemProvider());
 ```
 ### 为RecyclerView设置LayoutManager和Adapter
 ```java
