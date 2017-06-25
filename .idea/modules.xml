@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Adapter.iml" filepath="$PROJECT_DIR$/Adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Adapter.iml" filepath="$PROJECT_DIR$/Adapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simple/simple.iml" filepath="$PROJECT_DIR$/simple/simple.iml" />
       <module fileurl="file://$PROJECT_DIR$/simple/simple.iml" filepath="$PROJECT_DIR$/simple/simple.iml" />
     </modules>
   </component>

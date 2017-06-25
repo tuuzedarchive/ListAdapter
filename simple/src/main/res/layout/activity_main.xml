@@ -4,7 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.tuuzed.adapter.simple.MainActivity">
+    tools:context="com.github.tuuzed.adapter.simple.MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
