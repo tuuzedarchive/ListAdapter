@@ -16,7 +16,7 @@ dependencies {
 }
 ```
 ## 如何使用
-### 新建一个类实现ItemComponent接口
+### 新建一个类实现ItemProvider接口
 ```java
 // StringItemProvider.java
 public class StringItemProvider extends ItemProvider<String, StringItemProvider.ViewHolder> {
