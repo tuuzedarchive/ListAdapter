@@ -20,17 +20,38 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Items mItems;
     private Map<Class<?>, ItemProvider> mPool;
 
-    public void register(@NonNull Class<?> clazz, @NonNull ItemProvider provider) {
-        provider.setAdapter(this);
-        provider.setContext(mContext);
-        mPool.put(clazz, provider);
-        provider.ready();
+
+    public RecyclerViewAdapter(@NonNull RecyclerView recyclerView) {
+        this(recyclerView.getContext());
+        recyclerView.setAdapter(this);
+    }
+
+
+    public RecyclerViewAdapter(@NonNull RecyclerView recyclerView, @NonNull Items items) {
+        this(recyclerView.getContext(), items);
+        recyclerView.setAdapter(this);
+    }
+
+    public RecyclerViewAdapter(@NonNull Context context) {
+        this(context, new Items());
     }
 
     public RecyclerViewAdapter(@NonNull Context context, @NonNull Items items) {
         mContext = context;
         mItems = items;
         mPool = new HashMap<>();
+    }
+
+    public <T> void register(@NonNull Class<T> clazz, @NonNull ItemProvider<T> provider) {
+        provider.setAdapter(this);
+        provider.setContext(mContext);
+        mPool.put(clazz, provider);
+        provider.ready();
+    }
+
+    @NonNull
+    public Items items() {
+        return mItems;
     }
 
     @Override
@@ -45,10 +66,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (itemProvider == null) {
             throw new UnregisteredItemProviderException(clazz);
         }
-        View itemView = LayoutInflater.from(mContext).inflate(itemProvider.getItemLayoutId(), parent, false);
+        View itemView = LayoutInflater.from(mContext)
+                .inflate(itemProvider.getItemLayoutId(), parent, false);
         return new ViewHolder(itemView);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Object item = mItems.get(position);

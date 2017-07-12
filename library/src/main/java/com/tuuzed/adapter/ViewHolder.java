@@ -26,6 +26,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return view;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends View> T $(@IdRes int id, @NonNull Class<T> clazz) {
         View view = views.get(id);
         if (view == null) {
