@@ -1,13 +1,10 @@
 package com.tuuzed.adapter.simple.provider;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tuuzed.adapter.ItemProvider;
+import com.tuuzed.adapter.ViewHolder;
 import com.tuuzed.adapter.simple.R;
 
 /**
@@ -15,26 +12,17 @@ import com.tuuzed.adapter.simple.R;
  *
  * @author LYH
  */
-public class LongItemProvider extends ItemProvider<Long, LongItemProvider.ViewHolder> {
+public class LongItemProvider extends ItemProvider<Long> {
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Long item, @NonNull int position) {
-        holder.textView.setText("LONG => " + item);
-
+    public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Long item, int position) {
+        holder.$(R.id.text, TextView.class).setText("Long =>" + item);
     }
 
-    @NonNull
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, LayoutInflater inflater) {
-        return new LongItemProvider.ViewHolder(inflater.inflate(R.layout.item_long, parent, false));
+    public int getItemLayoutId() {
+        return R.layout.item_long;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text);
-        }
-    }
 }

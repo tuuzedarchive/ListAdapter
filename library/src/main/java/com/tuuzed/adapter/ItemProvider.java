@@ -1,15 +1,13 @@
 package com.tuuzed.adapter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 
 /**
  * @author TuuZed
  */
-public abstract class ItemProvider<Item, VH extends RecyclerView.ViewHolder> {
+public abstract class ItemProvider<Item> {
     private Context context;
     private RecyclerViewAdapter adapter;
 
@@ -29,8 +27,14 @@ public abstract class ItemProvider<Item, VH extends RecyclerView.ViewHolder> {
         return adapter;
     }
 
-    public abstract void onBindViewHolder(@NonNull VH holder, @NonNull Item item, int position);
+    /**
+     * 全部参数准备完毕时回调
+     */
+    public void ready() {
+    }
 
-    @NonNull
-    public abstract VH onCreateViewHolder(ViewGroup parent, LayoutInflater inflater);
+    public abstract void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Item item, int position);
+
+    @LayoutRes
+    public abstract int getItemLayoutId();
 }

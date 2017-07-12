@@ -19,29 +19,18 @@ dependencies {
 ### 新建一个类实现ItemProvider接口
 ```java
 // StringItemProvider.java
-public class StringItemProvider extends ItemProvider<String, StringItemProvider.ViewHolder> {
+public class StringItemProvider extends ItemProvider<String> {
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, String item, int position) {
-        holder.textView.setText("String => " + item);
+    public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull String item, int position) {
+        holder.$(R.id.text, TextView.class).setText("String =>" + item);
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, LayoutInflater inflater) {
-        return new StringItemProvider.ViewHolder(inflater.inflate(R.layout.item_string, parent, false));
+    public int getItemLayoutId() {
+        return R.layout.item_string;
     }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text);
-        }
-    }
-
 }
 
 ```
