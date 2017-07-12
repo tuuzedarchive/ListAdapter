@@ -22,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mAdapter = new RecyclerViewAdapter(mItems = new Items());
-        mAdapter.register(String.class, new StringItemProvider(this));
-        mAdapter.register(Integer.class, new IntegerItemProvider(this));
-        mAdapter.register(Long.class, new LongItemProvider(this));
+        mAdapter = new RecyclerViewAdapter(this, mItems = new Items());
+        mAdapter.register(String.class, new StringItemProvider());
+        mAdapter.register(Integer.class, new IntegerItemProvider());
+        mAdapter.register(Long.class, new LongItemProvider());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);

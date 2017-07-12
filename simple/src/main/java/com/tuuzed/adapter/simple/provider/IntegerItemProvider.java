@@ -18,9 +18,6 @@ import com.tuuzed.adapter.simple.R;
  */
 public class IntegerItemProvider extends ItemProvider<Integer, IntegerItemProvider.ViewHolder> {
 
-    public IntegerItemProvider(@NonNull Context context) {
-        super(context);
-    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Integer item, int position) {

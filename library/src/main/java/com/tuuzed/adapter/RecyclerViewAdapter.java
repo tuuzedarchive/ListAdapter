@@ -1,5 +1,6 @@
 package com.tuuzed.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,14 +15,18 @@ import java.util.Map;
  * @author LYH
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private Context mContext;
     private Items mItems;
     private Map<Class<?>, ItemProvider> mPool;
 
     public void register(@NonNull Class<?> clazz, @NonNull ItemProvider provider) {
+        provider.setAdapter(this);
+        provider.setContext(mContext);
         mPool.put(clazz, provider);
     }
 
-    public RecyclerViewAdapter(@NonNull Items items) {
+    public RecyclerViewAdapter(@NonNull Context context, @NonNull Items items) {
+        mContext = context;
         mItems = items;
         mPool = new HashMap<>();
     }
@@ -33,9 +38,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemProvider itemView = mPool.get(mItems.get(viewType).getClass());
+        Class<?> clazz = mItems.get(viewType).getClass();
+        ItemProvider itemView = mPool.get(clazz);
         if (itemView == null) {
-            throw new NotFindItemProvider();
+            throw new UnregisteredItemProviderException(clazz);
         }
         return itemView.onCreateViewHolder(parent, LayoutInflater.from(parent.getContext()));
     }
@@ -43,9 +49,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Object item = mItems.get(position);
-        ItemProvider itemView = mPool.get(item.getClass());
+        Class<?> clazz = item.getClass();
+        ItemProvider itemView = mPool.get(clazz);
         if (itemView == null) {
-            throw new NotFindItemProvider();
+            throw new UnregisteredItemProviderException(clazz);
         } else {
             itemView.onBindViewHolder(holder, item, position);
         }

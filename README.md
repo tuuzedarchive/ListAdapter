@@ -48,7 +48,7 @@ public class StringItemProvider extends ItemProvider<String, StringItemProvider.
 ### 实例化RecyclerViewAdapter并注册ItemProvider
 ```java
 Items items = new Items();
-RecyclerViewAdapter adapter = new RecyclerViewAdapter(items);
+RecyclerViewAdapter adapter = new RecyclerViewAdapter(context,items);
 adapter.register(String.class, new StringItemProvider());
 ```
 ### 为RecyclerView设置LayoutManager和Adapter

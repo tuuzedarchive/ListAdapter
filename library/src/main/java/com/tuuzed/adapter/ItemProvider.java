@@ -11,8 +11,9 @@ import android.view.ViewGroup;
  */
 public abstract class ItemProvider<Item, VH extends RecyclerView.ViewHolder> {
     private Context context;
+    private RecyclerViewAdapter adapter;
 
-    public ItemProvider(@NonNull Context context) {
+    void setContext(@NonNull Context context) {
         this.context = context;
     }
 
@@ -20,10 +21,16 @@ public abstract class ItemProvider<Item, VH extends RecyclerView.ViewHolder> {
         return context;
     }
 
+    void setAdapter(@NonNull RecyclerViewAdapter adapter) {
+        this.adapter = adapter;
+    }
+
+    public RecyclerViewAdapter getAdapter() {
+        return adapter;
+    }
+
     public abstract void onBindViewHolder(@NonNull VH holder, @NonNull Item item, int position);
 
-
-    public abstract
     @NonNull
-    VH onCreateViewHolder(ViewGroup parent, LayoutInflater inflater);
+    public abstract VH onCreateViewHolder(ViewGroup parent, LayoutInflater inflater);
 }
