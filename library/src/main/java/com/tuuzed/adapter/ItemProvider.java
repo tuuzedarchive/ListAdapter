@@ -30,7 +30,8 @@ public abstract class ItemProvider<Item> {
     /**
      * 全部参数准备完毕时回调
      */
-    public void ready() {
+    void ready() {
+
     }
 
     public abstract void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Item item, int position);
