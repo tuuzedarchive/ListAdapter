@@ -17,7 +17,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    public View $(@IdRes int id) {
+    public View find(@IdRes int id) {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);
@@ -27,12 +27,22 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends View> T $(@IdRes int id, @NonNull Class<T> clazz) {
+    public <T extends View> T find(@IdRes int id, @NonNull Class<T> clazz) {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);
             views.put(id, view);
         }
         return (T) view;
+    }
+
+    @Deprecated
+    public View $(@IdRes int id) {
+        return find(id);
+    }
+
+    @Deprecated
+    public <T extends View> T $(@IdRes int id, @NonNull Class<T> clazz) {
+        return find(id, clazz);
     }
 }

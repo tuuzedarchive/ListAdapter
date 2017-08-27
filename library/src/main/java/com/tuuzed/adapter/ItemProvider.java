@@ -4,9 +4,6 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-/**
- * @author TuuZed
- */
 public abstract class ItemProvider<Item> {
     private Context context;
     private RecyclerViewAdapter adapter;
@@ -15,6 +12,7 @@ public abstract class ItemProvider<Item> {
         this.context = context;
     }
 
+    @NonNull
     public Context getContext() {
         return context;
     }
@@ -34,7 +32,7 @@ public abstract class ItemProvider<Item> {
 
     }
 
-    public abstract void onBindViewHolder(@NonNull ViewHolder holder, @NonNull Item item, int position);
+    public abstract void onBindViewHolder(@NonNull ViewHolder holder, Item item, int position);
 
     @LayoutRes
     public abstract int getItemLayoutId();

@@ -2,10 +2,10 @@ package com.tuuzed.adapter;
 
 import android.support.annotation.LayoutRes;
 
-public abstract class SimpleItemProvider<Item> extends ItemProvider<Item> {
+public abstract class FastItemProvider<Item> extends ItemProvider<Item> {
     private int itemLayoutId;
 
-    public SimpleItemProvider(@LayoutRes int itemLayoutId) {
+    public FastItemProvider(@LayoutRes int itemLayoutId) {
         this.itemLayoutId = itemLayoutId;
     }
 
