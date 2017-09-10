@@ -21,6 +21,7 @@ public abstract class ItemProvider<Item> {
         this.adapter = adapter;
     }
 
+    @NonNull
     public RecyclerViewAdapter getAdapter() {
         return adapter;
     }
@@ -28,8 +29,7 @@ public abstract class ItemProvider<Item> {
     /**
      * 全部参数准备完毕时回调
      */
-    void ready() {
-
+    void onReady() {
     }
 
     public abstract void onBindViewHolder(@NonNull ViewHolder holder, Item item, int position);

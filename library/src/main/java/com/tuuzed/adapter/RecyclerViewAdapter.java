@@ -24,8 +24,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         this(recyclerView.getContext());
         recyclerView.setAdapter(this);
     }
-
-
+    
     public RecyclerViewAdapter(@NonNull RecyclerView recyclerView, @NonNull Items items) {
         this(recyclerView.getContext(), items);
         recyclerView.setAdapter(this);
@@ -45,7 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         provider.setAdapter(this);
         provider.setContext(mContext);
         mItemProviderPool.put(clazz, provider);
-        provider.ready();
+        provider.onReady();
     }
 
     @NonNull
