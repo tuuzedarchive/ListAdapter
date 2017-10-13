@@ -1,16 +1,11 @@
 package com.tuuzed.adapter;
 
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-public class EmptyItemProvider<Item> extends FastItemProvider<Item> {
-
-    public EmptyItemProvider(@LayoutRes int itemLayoutId) {
-        super(itemLayoutId);
-    }
+public class EmptyItemProvider<T> extends ItemProvider<T> {
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, Item item, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, T item, int position) {
 
     }
 

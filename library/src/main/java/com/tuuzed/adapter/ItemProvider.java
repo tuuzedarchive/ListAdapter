@@ -4,26 +4,36 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-public abstract class ItemProvider<Item> {
-    private Context context;
-    private RecyclerViewAdapter adapter;
+public abstract class ItemProvider<T> {
+    private Context mContext;
+    private RSimpleAdapter mAdapter;
+    private int mLayoutId;
+
+    void setLayoutId(@LayoutRes int layoutId) {
+        this.mLayoutId = layoutId;
+    }
+
+    @LayoutRes
+    public int getLayoutId() {
+        return mLayoutId;
+    }
 
     void setContext(@NonNull Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     @NonNull
     public Context getContext() {
-        return context;
+        return mContext;
     }
 
-    void setAdapter(@NonNull RecyclerViewAdapter adapter) {
-        this.adapter = adapter;
+    void setAdapter(@NonNull RSimpleAdapter adapter) {
+        this.mAdapter = adapter;
     }
 
     @NonNull
-    public RecyclerViewAdapter getAdapter() {
-        return adapter;
+    public RSimpleAdapter getAdapter() {
+        return mAdapter;
     }
 
     /**
@@ -32,8 +42,5 @@ public abstract class ItemProvider<Item> {
     void onReady() {
     }
 
-    public abstract void onBindViewHolder(@NonNull ViewHolder holder, Item item, int position);
-
-    @LayoutRes
-    public abstract int getItemLayoutId();
+    public abstract void onBindViewHolder(@NonNull ViewHolder holder, T item, int position);
 }
