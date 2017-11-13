@@ -1,4 +1,4 @@
-package com.tuuzed.adapter;
+package com.tuuzed.adapter_simple;
 
 import org.junit.Test;
 

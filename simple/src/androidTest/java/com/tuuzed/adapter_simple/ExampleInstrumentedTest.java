@@ -1,4 +1,4 @@
-package com.tuuzed.adapter;
+package com.tuuzed.adapter_simple;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("io.github.tuuzed.adapter.test", appContext.getPackageName());
+        assertEquals("io.github.tuuzed.adapter.simple", appContext.getPackageName());
     }
 }
