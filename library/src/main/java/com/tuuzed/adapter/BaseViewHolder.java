@@ -16,13 +16,13 @@ import android.widget.TextView;
 /**
  * 通用ViewHolder
  */
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class BaseViewHolder extends RecyclerView.ViewHolder {
     /**
      * 缓存View
      */
     private SparseArray<View> views = new SparseArray<>();
 
-    public ViewHolder(View itemView) {
+    public BaseViewHolder(View itemView) {
         super(itemView);
     }
 

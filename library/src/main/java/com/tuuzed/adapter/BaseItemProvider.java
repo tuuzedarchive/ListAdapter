@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-public abstract class ItemProvider<T> {
+public abstract class BaseItemProvider<T> {
     private Context mContext;
-    private RSimpleAdapter mAdapter;
+    private BaseAdapter mAdapter;
     private int mLayoutId;
 
     void setLayoutId(@LayoutRes int layoutId) {
@@ -27,20 +27,20 @@ public abstract class ItemProvider<T> {
         return mContext;
     }
 
-    void setAdapter(@NonNull RSimpleAdapter adapter) {
+    void setAdapter(@NonNull BaseAdapter adapter) {
         this.mAdapter = adapter;
     }
 
     @NonNull
-    public RSimpleAdapter getAdapter() {
+    public BaseAdapter getAdapter() {
         return mAdapter;
     }
 
     /**
      * 全部参数准备完毕时回调
      */
-    void onReady() {
+    public void onReady() {
     }
 
-    public abstract void onBindViewHolder(@NonNull ViewHolder holder, T item, int position);
+    public abstract void onBindViewHolder(@NonNull BaseViewHolder holder, T item, int position);
 }

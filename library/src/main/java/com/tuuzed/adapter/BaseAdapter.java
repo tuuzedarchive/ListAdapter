@@ -17,34 +17,34 @@ import java.util.Map;
  *
  * @author LYH
  */
-public class RSimpleAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private Items mItems;
-    private Map<Class<?>, ItemProvider> mItemProviderPools;
+    private Map<Class<?>, BaseItemProvider> mItemProviderPools;
 
-    public static RSimpleAdapter create() {
-        return new RSimpleAdapter();
+    public static BaseAdapter create() {
+        return new BaseAdapter();
     }
 
-    private RSimpleAdapter() {
+    private BaseAdapter() {
         mItems = new Items();
         mItemProviderPools = new HashMap<>();
     }
 
-    public <T> RSimpleAdapter register(@NonNull Class<T> clazz,
-                                       @LayoutRes int layoutId,
-                                       @NonNull ItemProvider<T> itemProvider) {
+    public <T> BaseAdapter register(@NonNull Class<T> type,
+                                    @LayoutRes int layoutId,
+                                    @NonNull BaseItemProvider<T> itemProvider) {
         itemProvider.setAdapter(this);
         itemProvider.setLayoutId(layoutId);
-        mItemProviderPools.put(clazz, itemProvider);
-        itemProvider.onReady();
+        mItemProviderPools.put(type, itemProvider);
         return this;
     }
 
-    public RSimpleAdapter attach(@NonNull RecyclerView recyclerView) {
-        Context context = recyclerView.getContext();
-        Collection<ItemProvider> values = mItemProviderPools.values();
-        for (ItemProvider itemProvider : values) {
+    public BaseAdapter attach(@NonNull RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final Collection<BaseItemProvider> values = mItemProviderPools.values();
+        for (BaseItemProvider itemProvider : values) {
             itemProvider.setContext(context);
+            itemProvider.onReady();
         }
         recyclerView.setAdapter(this);
         return this;
@@ -62,22 +62,22 @@ public class RSimpleAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Class<?> clazz = mItems.get(viewType).getClass();
-        ItemProvider itemProvider = mItemProviderPools.get(clazz);
+        BaseItemProvider itemProvider = mItemProviderPools.get(clazz);
         if (itemProvider == null) {
             throw new UnregisteredItemProviderException(clazz);
         }
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(itemProvider.getLayoutId(), parent, false);
-        return new ViewHolder(itemView);
+        return new BaseViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
         Object item = mItems.get(position);
         Class<?> clazz = item.getClass();
-        ItemProvider itemProvider = mItemProviderPools.get(clazz);
+        BaseItemProvider itemProvider = mItemProviderPools.get(clazz);
         if (itemProvider == null) {
             throw new UnregisteredItemProviderException(clazz);
         } else {

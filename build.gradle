@@ -5,9 +5,9 @@ buildscript {
         support_version = '26.1.0'
     }
     repositories {
-        maven { url "https://jitpack.io" }
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
         jcenter()
+        google()
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -19,9 +19,9 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "https://jitpack.io" }
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
         jcenter()
+        google()
+        maven { url "https://jitpack.io" }
     }
 }
 
