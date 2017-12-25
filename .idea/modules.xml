@@ -6,7 +6,7 @@
       <module fileurl="file://C:\Users\lyh\AndroidStudioProjects\adapter\adapter.iml" filepath="C:\Users\lyh\AndroidStudioProjects\adapter\adapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://C:\Users\lyh\AndroidStudioProjects\adapter\library\library.iml" filepath="C:\Users\lyh\AndroidStudioProjects\adapter\library\library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simple/simple.iml" filepath="$PROJECT_DIR$/simple/simple.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/simple.iml" filepath="$PROJECT_DIR$/sample/simple.iml" />
       <module fileurl="file://C:\Users\lyh\AndroidStudioProjects\adapter\simple\simple.iml" filepath="C:\Users\lyh\AndroidStudioProjects\adapter\simple\simple.iml" />
     </modules>
   </component>

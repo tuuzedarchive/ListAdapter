@@ -1,16 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext {
-        support_version = '26.1.0'
-    }
+    ext.versions = [
+            compileSdkVersion: 27,
+            minSdkVersion    : 14,
+            targetSdkVersion : 27,
+            //
+            supportLib       : '27.0.2',
+    ]
+    ext.pub_version = [
+            versionCode: 10,
+            versionName: 'v2.0.0',
+    ]
     repositories {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
