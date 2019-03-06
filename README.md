@@ -8,9 +8,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.tuuzed.androidx.recyclerview-adapter:core:2.1.0'
-    implementation 'com.tuuzed.androidx.recyclerview-adapter:kotlin:2.1.0'
-    implementation 'com.tuuzed.androidx.recyclerview-adapter:prefs:2.1.0'
+    implementation 'com.tuuzed.androidx.recyclerview:adapter-core:2.1.1-rc1'
+    implementation 'com.tuuzed.androidx.recyclerview:adapter-kotlin:2.1.1-rc1'
+    implementation 'com.tuuzed.androidx.recyclerview:adapter-prefs:2.1.1-rc1'
 }
 ```
 

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tuuzed.android.recyclerview.adapter.prefs.*
+import com.tuuzed.androidx.recyclerview.adapter.prefs.*
 import com.tuuzed.androidx.recyclerview.adapter.RecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 

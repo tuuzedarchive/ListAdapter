@@ -1,4 +1,6 @@
 /maven/
+bintray.properties
+
 *.iml
 .gradle
 /local.properties

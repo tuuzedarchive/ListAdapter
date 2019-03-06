@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tuuzed.android.recyclerview.adapter.prefs" />
+<manifest package="com.tuuzed.androidx.recyclerview.adapter.prefs" />

@@ -10,7 +10,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName pomVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -39,7 +39,7 @@ dependencies {
 
 ext.pom = [
         "groupId"   : pomGroupId,
-        "artifactId": 'kotlin',
+        "artifactId": 'adapter-kotlin',
         "version"   : pomVersion,
 ]
 

@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName pomVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,7 +44,7 @@ dependencies {
 
 ext.pom = [
         "groupId"   : pomGroupId,
-        "artifactId": 'prefs',
+        "artifactId": 'adapter-prefs',
         "version"   : pomVersion,
 ]
 

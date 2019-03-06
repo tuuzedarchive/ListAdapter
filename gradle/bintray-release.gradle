@@ -1,11 +1,11 @@
 apply plugin: 'com.novoda.bintray-release'
 
-def localProperties = new Properties()
-localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+def bintrayProperties = new Properties()
+bintrayProperties.load(project.rootProject.file('bintray.properties').newDataInputStream())
 
 publish {
-    bintrayUser = localProperties.getProperty('bintray.user')
-    bintrayKey = localProperties.getProperty('bintray.apiKey')
+    bintrayUser = bintrayProperties.getProperty('bintray.user')
+    bintrayKey = bintrayProperties.getProperty('bintray.apiKey')
     userOrg = 'tuuzed'
     repoName = 'maven'
     dryRun = false
