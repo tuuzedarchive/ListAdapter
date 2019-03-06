@@ -38,7 +38,7 @@ dependencies {
 
 ext.pom = [
         "groupId"   : pomGroupId,
-        "artifactId": 'adapter-core',
+        "artifactId": 'recyclerview-adapter-core',
         "version"   : pomVersion,
 ]
 

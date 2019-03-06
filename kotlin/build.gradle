@@ -39,7 +39,7 @@ dependencies {
 
 ext.pom = [
         "groupId"   : pomGroupId,
-        "artifactId": 'adapter-kotlin',
+        "artifactId": 'recyclerview-adapter-kotlin',
         "version"   : pomVersion,
 ]
 

@@ -44,7 +44,7 @@ dependencies {
 
 ext.pom = [
         "groupId"   : pomGroupId,
-        "artifactId": 'adapter-prefs',
+        "artifactId": 'recyclerview-adapter-prefs',
         "version"   : pomVersion,
 ]
 
