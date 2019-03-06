@@ -1,18 +1,14 @@
-[![](https://jitpack.io/v/tuuzed/adapter.svg)](https://jitpack.io/#tuuzed/adapter)
+# RecyclerViewAdapter
 
-### 添加JitPack仓库
-在当前项目的根目录下的 `build.gradle` 文件中添加如下内容:
-```groovy
-allprojects {
-    repositories {
-        maven { url "https://jitpack.io" }
-    }
+### Download
+
+``` groovy
+repositories {
+    maven { url 'https://gitee.com/androidxx/releases/raw/master/' }
 }
-```
 
-### 添加项目依赖
-```groovy
 dependencies {
-        compile 'com.github.tuuzed:adapter:v2.0.0'
+    implementation 'com.tuuzed.androidxx:recyclerviewadapter:1.0.0-alpha1'
 }
 ```
+

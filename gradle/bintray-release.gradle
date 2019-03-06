@@ -1,0 +1,17 @@
+apply plugin: 'com.novoda.bintray-release'
+
+def localProperties = new Properties()
+localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+publish {
+    bintrayUser = localProperties.getProperty('bintray.user')
+    bintrayKey = localProperties.getProperty('bintray.apiKey')
+    userOrg = 'tuuzed'
+    repoName = 'maven'
+    dryRun = false
+    groupId = project.pom["groupId"]
+    artifactId = project.pom["artifactId"]
+    publishVersion = project.pom["version"]
+    desc = 'recyclerview adapter'
+    website = 'https://github.com/tuuzed/recyclerview-adapter'
+}

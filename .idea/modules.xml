@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/adapter.iml" filepath="$PROJECT_DIR$/adapter.iml" />
-      <module fileurl="file://C:\Users\lyh\AndroidStudioProjects\adapter\adapter.iml" filepath="C:\Users\lyh\AndroidStudioProjects\adapter\adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://C:\Users\lyh\AndroidStudioProjects\adapter\library\library.iml" filepath="C:\Users\lyh\AndroidStudioProjects\adapter\library\library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/simple.iml" filepath="$PROJECT_DIR$/sample/simple.iml" />
-      <module fileurl="file://C:\Users\lyh\AndroidStudioProjects\adapter\simple\simple.iml" filepath="C:\Users\lyh\AndroidStudioProjects\adapter\simple\simple.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kotlin/kotlin.iml" filepath="$PROJECT_DIR$/kotlin/kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/prefs/prefs.iml" filepath="$PROJECT_DIR$/prefs/prefs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/recyclerview-adapter.iml" filepath="$PROJECT_DIR$/recyclerview-adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>
 </project>
