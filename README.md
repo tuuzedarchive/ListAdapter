@@ -1,6 +1,22 @@
-# RecyclerViewAdapter
+# RecyclerView Adapter
 
-### Download
+
+
+## recyclerview-adapter-core
+
+[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-core/images/download.svg)
+
+## recyclerview-adapter-kotlin
+
+[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-kotlin/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-kotlin/_latestVersion)
+
+## recyclerview-adapter-prefs
+
+[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-prefs/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-prefs/_latestVersion)
+
+
+
+#### 添加依赖
 
 ``` groovy
 repositories {
@@ -8,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-core:1.0.0-rc1'
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-kotlin:1.0.0-rc1'
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-prefs:1.0.0-rc1'
+    implementation 'com.tuuzed.androidx:recyclerview-adapter-core:latest.release'
+    implementation 'com.tuuzed.androidx:recyclerview-adapter-kotlin:latest.release'
+    implementation 'com.tuuzed.androidx:recyclerview-adapter-prefs:latest.release'
 }
 ```
 
