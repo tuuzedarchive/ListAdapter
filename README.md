@@ -4,7 +4,7 @@
 
 ## recyclerview-adapter-core
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-core/images/download.svg)
+[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-core/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-core/_latestVersion)
 
 ## recyclerview-adapter-kotlin
 
