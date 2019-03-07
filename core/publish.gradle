@@ -1,0 +1,51 @@
+apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
+
+
+def pomMetadata = [
+        'groupId'   : project.group ?: rootProject.group,
+        'artifactId': "recyclerview-adapter-${project.name}",
+        'version'   : project.version ?: rootProject.version,
+        'desc'      : 'recyclerview-adapter-core',
+        'website'   : 'https://github.com/tuuzed/recyclerview-adapter'
+]
+
+/**
+ * maven plugin
+ */
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = pomMetadata.groupId
+            pom.artifactId = pomMetadata.artifactId
+            pom.version = pomMetadata.version
+            repository(url: "file:/" + rootProject.file(".repo").absolutePath)
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+/**
+ * bintray-release plugin
+ */
+publish {
+    bintrayUser = System.getenv('bintray.user')
+    bintrayKey = System.getenv('bintray.apiKey')
+    userOrg = 'tuuzed'
+    repoName = 'maven'
+    dryRun = false
+    override = true
+    groupId = pomMetadata.groupId
+    artifactId = pomMetadata.artifactId
+    publishVersion = pomMetadata.version
+    desc = pomMetadata.desc
+    website = pomMetadata.website
+}

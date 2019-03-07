@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 
+
+group = rootProject.group
+version = rootProject.version
+
 android {
 
     compileSdkVersion 28
@@ -8,7 +12,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
-        versionName pomVersion
+        versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -23,7 +27,6 @@ android {
 
 }
 
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api 'androidx.annotation:annotation:1.0.2'
@@ -36,11 +39,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
-ext.pom = [
-        "groupId"   : pomGroupId,
-        "artifactId": 'recyclerview-adapter-core',
-        "version"   : pomVersion,
-]
 
-apply from: '../gradle/maven-deployer.gradle'
-apply from: '../gradle/bintray-release.gradle'
+apply from: './publish.gradle'

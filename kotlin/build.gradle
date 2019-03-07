@@ -2,6 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
+group = rootProject.group
+version = rootProject.version
 
 android {
     compileSdkVersion 28
@@ -10,7 +12,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
-        versionName pomVersion
+        versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -37,12 +39,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
-ext.pom = [
-        "groupId"   : pomGroupId,
-        "artifactId": 'recyclerview-adapter-kotlin',
-        "version"   : pomVersion,
-]
+apply from: './publish.gradle'
 
-apply from: '../gradle/maven-deployer.gradle'
-apply from: '../gradle/bintray-release.gradle'
 
