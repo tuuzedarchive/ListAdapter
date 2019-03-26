@@ -6,9 +6,9 @@
 
 [ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-core/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-core/_latestVersion)
 
-## recyclerview-adapter-kotlin
+## recyclerview-adapter-loadmore
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-kotlin/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-kotlin/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-loadmore/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-loadmore/_latestVersion)
 
 ## recyclerview-adapter-prefs
 
@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     implementation 'com.tuuzed.androidx:recyclerview-adapter-core:latest.release'
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-kotlin:latest.release'
+    implementation 'com.tuuzed.androidx:recyclerview-adapter-loadmore:latest.release'
     implementation 'com.tuuzed.androidx:recyclerview-adapter-prefs:latest.release'
 }
 ```
