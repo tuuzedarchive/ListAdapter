@@ -1,21 +1,23 @@
 package com.tuuzed.androidx.recyclerview.adapter.loadmore
 
 /**
- * 控制加载更多的开关, 作为 [的参数][OnLoadMoreListener.onLoadMore]
+ * 加载更多状态
  */
-class LoadMoreController internal constructor(private val mCallback: Callback) {
+class LoadMoreState {
 
     /** 获取是否启用了加载更多 */
-    var loadMoreEnabled = true
-        set(enabled) {
+    internal var loadMoreEnabled = true
+        set(value) {
             val canNotify = loadMoreEnabled
-            field = enabled
-
+            field = value
             if (canNotify && !loadMoreEnabled) {
-                mCallback.notifyChanged()
+                callback?.notifyChanged()
             }
         }
+
     private var mIsLoadFailed = false
+
+    internal var callback: Callback? = null
 
     /**
      * 设置是否加载失败
@@ -25,18 +27,21 @@ class LoadMoreController internal constructor(private val mCallback: Callback) {
     fun setLoadFailed(isLoadFailed: Boolean) {
         if (mIsLoadFailed != isLoadFailed) {
             mIsLoadFailed = isLoadFailed
-            mCallback.notifyLoadFailed(isLoadFailed)
+            callback?.notifyLoadFailed(isLoadFailed)
             loadMoreEnabled = !mIsLoadFailed
         }
     }
 
-    /**
-     * 设置加载完全部
-     */
+    fun setRefresh() {
+        loadMoreEnabled = true
+    }
+
+    /** 设置加载完全部 */
     fun setLoadComplete() {
         loadMoreEnabled = false
-        mCallback.notifyLoadComplete()
+        callback?.notifyLoadComplete()
     }
+
 
     internal interface Callback {
         fun notifyChanged()

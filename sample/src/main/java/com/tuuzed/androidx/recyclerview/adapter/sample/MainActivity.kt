@@ -1,13 +1,14 @@
 package com.tuuzed.androidx.recyclerview.adapter.sample
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tuuzed.androidx.recyclerview.adapter.prefs.*
 import com.tuuzed.androidx.recyclerview.adapter.RecyclerViewAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import com.tuuzed.androidx.recyclerview.adapter.prefs.*
+import kotlinx.android.synthetic.main.main_act.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,15 +18,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cxt = this
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.main_act)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        listAdapter = RecyclerViewAdapter()
-                .with(recyclerView)
-                .withPrefs()
+        listAdapter = RecyclerViewAdapter.with(recyclerView).withPrefs()
 
         listAdapter.appendItems(
+                prefGeneral {
+                    title = "Feed List"
+                    summary = "Feed List"
+                    callback = { _, _ ->
+                        startActivity(Intent(cxt, FeedListActivity::class.java))
+                        true
+                    }
+                },
                 prefCategory {
-                    title = "Category"
+                    title = "Prefs"
                 },
                 prefGeneral {
                     title = "General"

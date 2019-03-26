@@ -1,5 +1,4 @@
 include ':sample',
         ':core',
         ':prefs',
-        ':loadmore',
-        ':kotlin'
+        ':loadmore'

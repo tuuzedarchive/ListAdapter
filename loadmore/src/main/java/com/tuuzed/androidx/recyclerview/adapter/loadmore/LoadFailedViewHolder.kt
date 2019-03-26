@@ -5,15 +5,15 @@ import androidx.recyclerview.widget.RecyclerView
 
 internal class LoadFailedViewHolder(
         itemView: View,
-        enabled: LoadMoreController,
+        loadMoreState: LoadMoreState,
         listener: OnLoadMoreListener?
 ) : RecyclerView.ViewHolder(itemView) {
 
     init {
         Utils.setItemViewFullSpan(itemView)
         itemView.setOnClickListener {
-            enabled.setLoadFailed(false)
-            listener?.onLoadMore(enabled)
+            loadMoreState.setLoadFailed(false)
+            listener?.let { it(loadMoreState) }
         }
     }
 

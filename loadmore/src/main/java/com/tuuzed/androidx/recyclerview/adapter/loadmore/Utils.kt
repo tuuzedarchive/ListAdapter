@@ -21,4 +21,15 @@ internal object Utils {
         return LayoutInflater.from(parent.context).inflate(resource, parent, false)
     }
 
+    /** 取到最后的一个节点 */
+    fun lastPosition(lastPositions: IntArray): Int {
+        var last = lastPositions[0]
+        for (value in lastPositions) {
+            if (value > last) {
+                last = value
+            }
+        }
+        return last
+    }
+
 }

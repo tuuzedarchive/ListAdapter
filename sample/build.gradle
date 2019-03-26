@@ -27,8 +27,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
 
     implementation project(":core")
+    implementation project(":loadmore")
     implementation project(":prefs")
-    implementation project(":kotlin")
 
     // 单元测试
     testImplementation 'junit:junit:4.12'
