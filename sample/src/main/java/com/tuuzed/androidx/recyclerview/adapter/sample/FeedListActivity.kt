@@ -3,6 +3,7 @@ package com.tuuzed.androidx.recyclerview.adapter.sample
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,8 +78,12 @@ class FeedListActivity : AppCompatActivity() {
             if (Math.random() > 0.9) {
                 Log.d(TAG, "LoadFailed")
                 runOnUiThread {
-                    swipeRefreshLayout.isRefreshing = false
-                    loadMoreState.setLoadFailed(true)
+                    if (page == 0) {
+                        swipeRefreshLayout.isRefreshing = false
+                        Toast.makeText(this,"加载失败",Toast.LENGTH_SHORT).show()
+                    }else{
+                        loadMoreState.setLoadFailed(true)
+                    }
                 }
             } else {
                 runOnUiThread {
@@ -90,7 +95,7 @@ class FeedListActivity : AppCompatActivity() {
                     listAdapter.appendItems(list)
                     swipeRefreshLayout.isRefreshing = false
                     this.page = page + 1
-                    if (page == 5) {
+                    if (page >= 5) {
                         loadMoreState.setLoadComplete()
                     }
                     listAdapter.notifyDataSetChanged()

@@ -44,11 +44,13 @@ class LoadMoreState {
 
 
     internal interface Callback {
+
         fun notifyChanged()
 
         fun notifyLoadFailed(isLoadFailed: Boolean)
 
         fun notifyLoadComplete()
+
     }
 
 }

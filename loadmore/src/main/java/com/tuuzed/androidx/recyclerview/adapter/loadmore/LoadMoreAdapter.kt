@@ -53,11 +53,12 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
 
             override fun notifyLoadFailed(isLoadFailed: Boolean) {
                 mIsLoadFailed = isLoadFailed
-                notifyFooterHolderChanged()
+                notifyItemChanged(itemCount)
             }
 
             override fun notifyLoadComplete() {
                 enableShowNoMore = true
+                notifyItemChanged(itemCount)
             }
         }
     }
