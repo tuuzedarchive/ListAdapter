@@ -24,6 +24,7 @@ class FeedListActivity : AppCompatActivity() {
     private lateinit var listAdapter: RecyclerViewAdapter
 
     private var page: Int = 0
+    private var index: Int = 0
 
     private lateinit var layoutManagerName: String
     private val loadMoreState = LoadMoreState()
@@ -67,31 +68,32 @@ class FeedListActivity : AppCompatActivity() {
 
     private fun loadData(page: Int) {
         Log.d(TAG, "loadData: page: $page")
-        if (page == 5) {
-            loadMoreState.setLoadComplete()
-        }
-
         thread {
             val list = mutableListOf<String>()
-            for (index in 1..10) {
-                list.add("LayoutManager: $layoutManagerName, Page: $page, Index: $index")
+            for (i in 1..10) {
+                list.add("LayoutManager: $layoutManagerName, Page: $page, Index: ${++index}")
             }
             SystemClock.sleep(200)
-            if (Math.random() > 0.6) {
+            if (Math.random() > 0.9) {
+                Log.d(TAG, "LoadFailed")
                 runOnUiThread {
                     swipeRefreshLayout.isRefreshing = false
                     loadMoreState.setLoadFailed(true)
                 }
             } else {
                 runOnUiThread {
+                    Log.d(TAG, "LoadSuccess")
                     if (page == 0) {
                         listAdapter.items.clear()
                     }
                     loadMoreState.setLoadFailed(false)
                     listAdapter.appendItems(list)
-                    listAdapter.notifyDataSetChanged()
                     swipeRefreshLayout.isRefreshing = false
                     this.page = page + 1
+                    if (page == 5) {
+                        loadMoreState.setLoadComplete()
+                    }
+                    listAdapter.notifyDataSetChanged()
                 }
             }
         }
