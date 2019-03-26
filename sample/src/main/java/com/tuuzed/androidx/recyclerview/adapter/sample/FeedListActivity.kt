@@ -2,8 +2,11 @@ package com.tuuzed.androidx.recyclerview.adapter.sample
 
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.tuuzed.androidx.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.androidx.recyclerview.adapter.CommonItemViewHolder
 import com.tuuzed.androidx.recyclerview.adapter.RecyclerViewAdapter
@@ -13,16 +16,37 @@ import kotlinx.android.synthetic.main.feedlist_act.*
 import kotlin.concurrent.thread
 
 class FeedListActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "FeedListActivity"
+    }
+
     private lateinit var listAdapter: RecyclerViewAdapter
 
     private var page: Int = 0
 
+    private lateinit var layoutManagerName: String
     private val loadMoreState = LoadMoreState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.feedlist_act)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val random = Math.random()
+        recyclerView.layoutManager = when {
+            random > 0.6 -> {
+                layoutManagerName = "Linear"
+                LinearLayoutManager(this)
+            }
+            random > 0.3 -> {
+                layoutManagerName = "Grid"
+                GridLayoutManager(this, 2)
+            }
+            else -> {
+                layoutManagerName = "StaggeredGrid"
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            }
+        }
         listAdapter = RecyclerViewAdapter
                 .with(recyclerView) {
                     bind(String::class.java, object : AbstractItemViewBinder<String>() {
@@ -33,32 +57,42 @@ class FeedListActivity : AppCompatActivity() {
                     })
                 }
                 .withLoadMore(recyclerView, loadMoreState) {
-                    it.setLoadFailed(false)
                     loadData(page)
                 }
         swipeRefreshLayout.setOnRefreshListener {
             loadMoreState.setRefresh()
             loadData(0)
         }
-        loadData(page)
     }
 
     private fun loadData(page: Int) {
+        Log.d(TAG, "loadData: page: $page")
         if (page == 5) {
             loadMoreState.setLoadComplete()
         }
-        if (page == 0) {
-            listAdapter.items.clear()
-        }
+
         thread {
-            for (index in 1..5) {
-                listAdapter.items.add("Page: $page, Index: $index")
+            val list = mutableListOf<String>()
+            for (index in 1..10) {
+                list.add("LayoutManager: $layoutManagerName, Page: $page, Index: $index")
             }
-            SystemClock.sleep(1000)
-            runOnUiThread {
-                listAdapter.notifyDataSetChanged()
-                swipeRefreshLayout.isRefreshing = false
-                this.page = page + 1
+            SystemClock.sleep(200)
+            if (Math.random() > 0.6) {
+                runOnUiThread {
+                    swipeRefreshLayout.isRefreshing = false
+                    loadMoreState.setLoadFailed(true)
+                }
+            } else {
+                runOnUiThread {
+                    if (page == 0) {
+                        listAdapter.items.clear()
+                    }
+                    loadMoreState.setLoadFailed(false)
+                    listAdapter.appendItems(list)
+                    listAdapter.notifyDataSetChanged()
+                    swipeRefreshLayout.isRefreshing = false
+                    this.page = page + 1
+                }
             }
         }
     }

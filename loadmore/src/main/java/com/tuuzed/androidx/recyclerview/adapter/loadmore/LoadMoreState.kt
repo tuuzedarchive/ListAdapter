@@ -6,8 +6,8 @@ package com.tuuzed.androidx.recyclerview.adapter.loadmore
 class LoadMoreState {
 
     /** 获取是否启用了加载更多 */
-    internal var loadMoreEnabled = true
-        set(value) {
+    var loadMoreEnabled = true
+        internal set(value) {
             val canNotify = loadMoreEnabled
             field = value
             if (canNotify && !loadMoreEnabled) {

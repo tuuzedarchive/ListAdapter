@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-/**
- * 在不改动 RecyclerView 原有 adapter 的情况下，使其拥有加载更多功能和自定义底部视图。
- */
+
 internal class LoadMoreAdapter @JvmOverloads constructor(
         val originalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         val loadMoreState: LoadMoreState,
@@ -20,7 +18,8 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
         var loadFailedView: View? = null,
         @LayoutRes var footerViewLayoutRes: Int = R.layout.loadmore_footer,
         @LayoutRes var noMoreViewLayoutRes: Int = R.layout.loadmore_nomore,
-        @LayoutRes var loadFailedViewLayoutRes: Int = R.layout.loadmore_loadfailed
+        @LayoutRes var loadFailedViewLayoutRes: Int = R.layout.loadmore_loadfailed,
+        val onLoadMoreListener: OnLoadMoreListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -39,7 +38,6 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
 
 
     private var mRecyclerView: RecyclerView? = null
-    private lateinit var mOnLoadMoreListener: OnLoadMoreListener
     private var mIsLoading: Boolean = false
     private var mShouldRemove: Boolean = false
     private var mIsLoadFailed: Boolean = false
@@ -70,12 +68,11 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
             loadMoreState.loadMoreEnabled = value
         }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_FOOTER -> FooterViewHolder(getFooterView(parent))
             TYPE_NO_MORE -> NoMoreViewHolder(getNoMoreView(parent))
-            TYPE_LOAD_FAILED -> LoadFailedViewHolder(getLoadFailedView(parent), loadMoreState, mOnLoadMoreListener)
+            TYPE_LOAD_FAILED -> LoadFailedViewHolder(getLoadFailedView(parent), loadMoreState, onLoadMoreListener)
             else -> originalAdapter.onCreateViewHolder(parent, viewType)
         }
     }
@@ -85,11 +82,10 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         if (holder is FooterViewHolder) {
             // 当 RecyclerView 不能滚动的时候(item 不能铺满屏幕的时候也是不能滚动的)
-            // call loadMore
             if (!canScroll() && !mIsLoading) {
                 mIsLoading = true
                 // 修复当RecyclerView正在计算布局或滚动时无法调用到OnLoadMoreListener#onLoadMore方法的Bug
-                mRecyclerView?.post { mOnLoadMoreListener(loadMoreState) }
+                mRecyclerView?.post { onLoadMoreListener(loadMoreState) }
             }
         } else if (holder is NoMoreViewHolder || holder is LoadFailedViewHolder) {
             // pass
@@ -164,18 +160,6 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
         recyclerView.removeOnScrollListener(mOnScrollListener)
         originalAdapter.unregisterAdapterDataObserver(mObserver)
         mRecyclerView = null
-    }
-
-    fun setLoadMoreListener(listener: OnLoadMoreListener) {
-        mOnLoadMoreListener = listener
-    }
-
-    fun setShouldRemove(shouldRemove: Boolean) {
-        mShouldRemove = shouldRemove
-    }
-
-    fun setLoadFailed(isLoadFailed: Boolean) {
-        loadMoreState.setLoadFailed(isLoadFailed)
     }
 
 
@@ -329,7 +313,7 @@ internal class LoadMoreAdapter @JvmOverloads constructor(
                 }
                 if (isBottom) {
                     mIsLoading = true
-                    mOnLoadMoreListener(loadMoreState)
+                    onLoadMoreListener(loadMoreState)
                 }
             }
         }

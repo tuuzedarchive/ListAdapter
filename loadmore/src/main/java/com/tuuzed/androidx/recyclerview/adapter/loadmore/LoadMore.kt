@@ -5,7 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.tuuzed.androidx.recyclerview.adapter.RecyclerViewAdapter
 
-
+@JvmOverloads
 fun RecyclerViewAdapter.withLoadMore(
         recyclerView: RecyclerView,
         loadMoreState: LoadMoreState = LoadMoreState(),
@@ -36,6 +36,7 @@ fun RecyclerViewAdapter.withLoadMore(
 
 object LoadMore {
 
+    @JvmOverloads
     fun with(recyclerView: RecyclerView,
              loadMoreState: LoadMoreState = LoadMoreState(),
              enableLoadMore: Boolean = true,
@@ -59,10 +60,10 @@ object LoadMore {
                 loadFailedView = loadFailedView,
                 footerViewLayoutRes = footerViewLayoutRes,
                 noMoreViewLayoutRes = noMoreViewLayoutRes,
-                loadFailedViewLayoutRes = loadFailedViewLayoutRes
+                loadFailedViewLayoutRes = loadFailedViewLayoutRes,
+                onLoadMoreListener = listener
         ).also {
             it.setHasStableIds(it.originalAdapter.hasStableIds())
-            it.setLoadMoreListener(listener)
         }
         loadMoreAdapter.loadMoreEnabled = enableLoadMore
         recyclerView.adapter = loadMoreAdapter
