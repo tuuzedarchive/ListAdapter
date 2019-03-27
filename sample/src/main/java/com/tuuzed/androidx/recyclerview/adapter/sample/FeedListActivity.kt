@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.tuuzed.androidx.recyclerview.adapter.AbstractItemViewBinder
-import com.tuuzed.androidx.recyclerview.adapter.CommonItemViewHolder
 import com.tuuzed.androidx.recyclerview.adapter.RecyclerViewAdapter
 import com.tuuzed.androidx.recyclerview.adapter.loadmore.LoadMoreState
 import com.tuuzed.androidx.recyclerview.adapter.loadmore.withLoadMore
@@ -51,12 +49,9 @@ class FeedListActivity : AppCompatActivity() {
         }
         listAdapter = RecyclerViewAdapter
                 .with(recyclerView) {
-                    bind(String::class.java, object : AbstractItemViewBinder<String>() {
-                        override fun getLayoutId() = android.R.layout.simple_list_item_1
-                        override fun onBindViewHolder(holder: CommonItemViewHolder, item: String, position: Int) {
-                            holder.text(android.R.id.text1, item)
-                        }
-                    })
+                    bind(String::class.java, android.R.layout.simple_list_item_1) { holder, item, _ ->
+                        holder.text(android.R.id.text1, item)
+                    }
                 }
                 .withLoadMore(recyclerView, loadMoreState) {
                     loadData(page)
@@ -75,18 +70,17 @@ class FeedListActivity : AppCompatActivity() {
                 list.add("LayoutManager: $layoutManagerName, Page: $page, Index: ${++index}")
             }
             SystemClock.sleep(200)
-            if (Math.random() > 0.9) {
-                Log.d(TAG, "LoadFailed")
-                runOnUiThread {
+            runOnUiThread {
+                if (Math.random() > 0.9) {
+                    Log.d(TAG, "LoadFailed")
+
                     if (page == 0) {
                         swipeRefreshLayout.isRefreshing = false
-                        Toast.makeText(this,"加载失败",Toast.LENGTH_SHORT).show()
-                    }else{
+                        Toast.makeText(this, "加载失败", Toast.LENGTH_SHORT).show()
+                    } else {
                         loadMoreState.setLoadFailed(true)
                     }
-                }
-            } else {
-                runOnUiThread {
+                } else {
                     Log.d(TAG, "LoadSuccess")
                     if (page == 0) {
                         listAdapter.items.clear()

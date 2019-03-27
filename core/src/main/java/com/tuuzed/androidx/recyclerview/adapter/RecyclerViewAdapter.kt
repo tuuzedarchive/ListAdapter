@@ -56,8 +56,8 @@ class RecyclerViewAdapter constructor(
 
     fun <T, VH : RecyclerView.ViewHolder> bind(itemType: Class<T>, onCreateViewHolder: OnCreateViewHolder<VH>, onBindViewHolder: OnBindViewHolder<T, VH>): ItemTypeViewBinder<T, VH> {
         val binder = object : ItemTypeViewBinder<T, VH> {
-            override fun onBindViewHolder(holder: VH, item: T, position: Int) = onBindViewHolder.onBindViewHolder(holder, item, position)
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = onCreateViewHolder.onCreateViewHolder(parent, viewType)
+            override fun onBindViewHolder(holder: VH, item: T, position: Int) = onBindViewHolder(holder, item, position)
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = onCreateViewHolder(parent, viewType)
         }
         bind(itemType, binder)
         return binder
@@ -67,7 +67,7 @@ class RecyclerViewAdapter constructor(
         val binder = object : AbstractItemViewBinder<T>() {
             override fun getLayoutId() = layoutId
             override fun onBindViewHolder(holder: CommonItemViewHolder, item: T, position: Int) {
-                onBindViewHolder.onBindViewHolder(holder, item, position)
+                onBindViewHolder(holder, item, position)
             }
         }
         bind(itemType, binder)

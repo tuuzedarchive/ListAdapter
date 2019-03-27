@@ -103,20 +103,20 @@ class CommonItemViewHolder : RecyclerView.ViewHolder {
         return this
     }
 
-    fun click(@IdRes id: Int, click: Click?): CommonItemViewHolder {
-        if (click == null) {
+    fun click(@IdRes id: Int, onClick: OnClick?): CommonItemViewHolder {
+        if (onClick == null) {
             find<View>(id).setOnClickListener(null)
         } else {
-            find<View>(id).setOnClickListener { click(it) }
+            find<View>(id).setOnClickListener { onClick(it) }
         }
         return this
     }
 
-    fun longClick(@IdRes id: Int, longClick: LongClick?): CommonItemViewHolder {
-        if (longClick == null) {
+    fun longClick(@IdRes id: Int, onLongClick: OnLongClick?): CommonItemViewHolder {
+        if (onLongClick == null) {
             find<View>(id).setOnLongClickListener(null)
         } else {
-            find<View>(id).setOnLongClickListener { longClick(it) }
+            find<View>(id).setOnLongClickListener { onLongClick(it) }
         }
         return this
     }

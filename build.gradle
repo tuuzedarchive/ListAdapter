@@ -23,7 +23,7 @@ allprojects {
 }
 
 group = 'com.tuuzed.androidx'
-version = '1.0.0-rc5'
+version = '1.0.0-rc6'
 
 task clean(type: Delete) {
     delete rootProject.buildDir
