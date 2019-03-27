@@ -85,13 +85,15 @@ class RecyclerViewAdapter constructor(
         return this
     }
 
-    fun setItems(items: MutableList<Any>): RecyclerViewAdapter {
-        this.items = items
+    @Suppress("UNCHECKED_CAST")
+    fun setItems(items: MutableList<*>): RecyclerViewAdapter {
+        this.items = items as MutableList<Any>
         return this
     }
 
-    fun appendItems(items: List<Any>): RecyclerViewAdapter {
-        this.items.addAll(items)
+    @Suppress("UNCHECKED_CAST")
+    fun appendItems(items: List<*>): RecyclerViewAdapter {
+        this.items.addAll(items as List<Any>)
         return this
     }
 
