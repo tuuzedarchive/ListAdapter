@@ -15,7 +15,7 @@ class RecyclerViewAdapter constructor(
 
         @JvmOverloads
         fun with(recyclerView: RecyclerView,
-                 items: MutableList<Any> = ArrayList(),
+                 items: MutableList<Any> = mutableListOf(),
                  @IntRange(from = 1) initTypeCapacity: Int = 16,
                  block: (RecyclerViewAdapter.() -> Unit)? = null
         ): RecyclerViewAdapter {
@@ -86,8 +86,13 @@ class RecyclerViewAdapter constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun setItems(items: MutableList<*>): RecyclerViewAdapter {
-        this.items = items as MutableList<Any>
+    fun setItems(items: List<*>): RecyclerViewAdapter {
+        if (items is MutableList<*>) {
+            this.items = items as MutableList<Any>
+        } else {
+            this.items = mutableListOf()
+            appendItems(items)
+        }
         return this
     }
 
