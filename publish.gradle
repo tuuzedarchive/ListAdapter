@@ -5,7 +5,7 @@ def pomMetadata = [
         'groupId'   : project.group ?: rootProject.group,
         'artifactId': "recyclerview-adapter-${project.name}",
         'version'   : project.version ?: rootProject.version,
-        'desc'      : 'recyclerview-adapter-loadmore',
+        'desc'      : "recyclerview-adapter-${project.name}",
         'website'   : 'https://github.com/tuuzed/recyclerview-adapter'
 ]
 

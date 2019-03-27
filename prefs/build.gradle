@@ -46,4 +46,4 @@ dependencies {
 }
 
 
-apply from: './publish.gradle'
+apply from: '../publish.gradle'
