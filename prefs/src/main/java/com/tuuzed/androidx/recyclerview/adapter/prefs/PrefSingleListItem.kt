@@ -1,5 +1,6 @@
 package com.tuuzed.androidx.recyclerview.adapter.prefs
 
+import androidx.annotation.LayoutRes
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.tuuzed.androidx.recyclerview.adapter.AbstractItemViewBinder
@@ -8,47 +9,40 @@ import com.tuuzed.androidx.recyclerview.adapter.CommonItemViewHolder
 data class PrefSingleListItem(
         var title: String = "",
         var summary: String = "",
-        var valuesLoader: ValuesLoader = { it(emptyList()) },
-        var displaysLoader: DisplaysLoader = { it(emptyList()) },
-        var checkedValue: Any? = null,
-        var checkedDisplay: String = summary,
+        var itemsLoader: ItemsLoader = { it(emptyList()) },
+        var itemToString: ItemToString = { it.toString() },
+        var checkedItem: Any? = null,
         var callback: PrefItemCallback<PrefSingleListItem> = { _, _ -> true }
 )
 
-class PrefSingleListItemViewBinder : AbstractItemViewBinder<PrefSingleListItem>() {
-    override fun getLayoutId() = R.layout.pref_listitem_singlelist
+class PrefSingleListItemViewBinder(
+        @LayoutRes private val layoutId: Int = R.layout.pref_listitem_singlelist
+) : AbstractItemViewBinder<PrefSingleListItem>() {
+    override fun getLayoutId() = layoutId
 
     override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefSingleListItem, position: Int) {
-        holder.text(R.id.tv_Title, item.title)
-        holder.text(R.id.tv_Summary, item.summary)
+        holder.text(R.id.pref_title, item.title)
+        holder.text(R.id.pref_summary, item.summary)
         holder.click(R.id.itemLayout) { v ->
-            item.valuesLoader { values ->
-                item.displaysLoader { displays ->
-                    if (values.size != displays.size) {
-                        throw IllegalArgumentException("values.size != displays.size")
-                    }
-                    MaterialDialog(v.context).show {
-                        title(text = item.title)
-                        listItemsSingleChoice(
-                                items = displays,
-                                initialSelection = values.indexOf(item.checkedValue),
-                                selection = { _, index, text ->
-                                    val oldCheckedValue = item.checkedValue
-                                    val oldCheckedDisplay = item.checkedDisplay
-                                    val oldSummary = item.summary
-                                    item.checkedValue = values[index]
-                                    item.checkedDisplay = text
-                                    item.summary = text
-                                    if (item.callback(item, position)) {
-                                        holder.text(R.id.tv_Summary, item.summary)
-                                    } else {
-                                        item.checkedValue = oldCheckedValue
-                                        item.checkedDisplay = oldCheckedDisplay
-                                        item.summary = oldSummary
-                                    }
+            item.itemsLoader { items ->
+                MaterialDialog(v.context).show {
+                    title(text = item.title)
+                    listItemsSingleChoice(
+                            items = items.map { item.itemToString(it) },
+                            initialSelection = items.indexOf(item.checkedItem),
+                            selection = { _, index, text ->
+                                val oldCheckedItem = item.checkedItem
+                                val oldSummary = item.summary
+                                item.checkedItem = items[index]
+                                item.summary = text
+                                if (item.callback(item, position)) {
+                                    holder.text(R.id.pref_summary, item.summary)
+                                } else {
+                                    item.checkedItem = oldCheckedItem
+                                    item.summary = oldSummary
                                 }
-                        )
-                    }
+                            }
+                    )
                 }
             }
         }

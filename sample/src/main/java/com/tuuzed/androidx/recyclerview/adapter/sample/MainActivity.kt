@@ -7,7 +7,8 @@ import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tuuzed.androidx.recyclerview.adapter.RecyclerViewAdapter
-import com.tuuzed.androidx.recyclerview.adapter.prefs.*
+import com.tuuzed.androidx.recyclerview.adapter.prefs.prefDsl
+import com.tuuzed.androidx.recyclerview.adapter.prefs.withPrefs
 import kotlinx.android.synthetic.main.main_act.*
 
 class MainActivity : AppCompatActivity() {
@@ -20,83 +21,82 @@ class MainActivity : AppCompatActivity() {
         cxt = this
         setContentView(R.layout.main_act)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        listAdapter = RecyclerViewAdapter.with(recyclerView).withPrefs()
-
-        listAdapter.appendItems(
-                prefGeneral {
-                    title = "Feed List"
-                    summary = "Feed List"
-                    callback = { _, _ ->
-                        startActivity(Intent(cxt, FeedListActivity::class.java))
-                        true
-                    }
-                },
-                prefCategory {
-                    title = "Prefs"
-                },
-                prefGeneral {
-                    title = "General"
-                    summary = "General#summary"
-                },
-                prefEditText {
-                    title = "EditText"
-                    summary = "EditText#summary"
-                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-                },
-                prefDivider(),
-                prefCheckBox {
-                    title = "CheckBox"
-                    summary = "CheckBox#summary"
-                },
-                prefSwitch {
-                    title = "Switch"
-                    summary = "Switch#summary"
-                },
-                prefRadio {
-                    title = "Radio"
-                    summary = "Radio#summary"
-                },
-                prefDivider(),
-                prefSingleList {
-                    title = "SingleList"
-                    summary = "SingleList#summary"
-                    valuesLoader = {
-                        it(arrayListOf(
-                                "Single Item 1",
-                                "Single Item 2",
-                                "Single Item 3",
-                                "Single Item 4"
-                        ))
-                    }
-                    displaysLoader = {
-                        it(arrayListOf(
-                                "Single Item 1",
-                                "Single Item 2",
-                                "Single Item 3",
-                                "Single Item 4"
-                        ))
-                    }
-                },
-                prefMultiList {
-                    title = "MultiList"
-                    summary = "MultiList#summary"
-                    valuesLoader = {
-                        it(arrayListOf(
-                                "Multi Item 1",
-                                "Multi Item 2",
-                                "Multi Item 3",
-                                "Multi Item 4"
-                        ))
-                    }
-                    displaysLoader = {
-                        it(arrayListOf(
-                                "Multi Item 1",
-                                "Multi Item 2",
-                                "Multi Item 3",
-                                "Multi Item 4"
-                        ))
-                    }
+        listAdapter = RecyclerViewAdapter.with(recyclerView).withPrefs().prefDsl {
+            prefGeneral {
+                title = "Feed List"
+                summary = "Feed List"
+                callback = { _, _ ->
+                    startActivity(Intent(cxt, FeedListActivity::class.java))
+                    true
                 }
-        ).notifyDataSetChanged()
+            }
+            prefCategory {
+                title = "Prefs"
+            }
+            prefGeneral {
+                title = "General"
+                summary = "General#summary"
+            }
+            prefEditText {
+                title = "EditText"
+                summary = "EditText#summary"
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            }
+            prefDivider {}
+            prefCheckBox {
+                title = "CheckBox"
+                summary = "CheckBox#summary"
+            }
+            prefSwitch {
+                title = "Switch"
+                summary = "Switch#summary"
+            }
+            prefRadio {
+                title = "Radio"
+                summary = "Radio#summary"
+            }
+            prefDivider {}
+            prefSingleList {
+                title = "SingleList"
+                summary = "SingleList#summary"
+                itemsLoader = {
+                    it(arrayListOf(
+                            "Single Item 1",
+                            "Single Item 2",
+                            "Single Item 3",
+                            "Single Item 4"
+                    ))
+                }
+                itemsLoader = {
+                    it(arrayListOf(
+                            "Single Item 1",
+                            "Single Item 2",
+                            "Single Item 3",
+                            "Single Item 4"
+                    ))
+                }
+            }
+            prefMultiList {
+                title = "MultiList"
+                summary = "MultiList#summary"
+                itemsLoader = {
+                    it(arrayListOf(
+                            "Multi Item 1",
+                            "Multi Item 2",
+                            "Multi Item 3",
+                            "Multi Item 4"
+                    ))
+                }
+                itemsLoader = {
+                    it(arrayListOf(
+                            "Multi Item 1",
+                            "Multi Item 2",
+                            "Multi Item 3",
+                            "Multi Item 4"
+                    ))
+                }
+            }
+        }
+        listAdapter.notifyDataSetChanged()
     }
 }

@@ -17,19 +17,19 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_Title"
+                android:id="@+id/pref_title"
                 style="@style/Prefs_ListItem_Title"
                 tools:text="Title" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_Summary"
+                android:id="@+id/pref_summary"
                 style="@style/Prefs_ListItem_Summary"
                 tools:text="This Summary ." />
 
         </LinearLayout>
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/checkbox"
+            android:id="@+id/pref_checkbox_widget"
             style="@style/Prefs_ListItem_CompoundButton_CheckBox"
             tools:checked="true" />
 

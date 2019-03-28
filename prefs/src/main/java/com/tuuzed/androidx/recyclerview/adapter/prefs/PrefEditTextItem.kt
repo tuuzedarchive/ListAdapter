@@ -1,6 +1,7 @@
 package com.tuuzed.androidx.recyclerview.adapter.prefs
 
 import android.text.InputType
+import androidx.annotation.LayoutRes
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.tuuzed.androidx.recyclerview.adapter.AbstractItemViewBinder
@@ -17,12 +18,14 @@ data class PrefEditTextItem(
         var callback: PrefItemCallback<PrefEditTextItem> = { _, _ -> true }
 )
 
-class PrefEditTextItemViewBinder : AbstractItemViewBinder<PrefEditTextItem>() {
-    override fun getLayoutId() = R.layout.pref_listitem_edittext
+class PrefEditTextItemViewBinder(
+        @LayoutRes private val layoutId: Int = R.layout.pref_listitem_edittext
+) : AbstractItemViewBinder<PrefEditTextItem>() {
+    override fun getLayoutId() = layoutId
 
     override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefEditTextItem, position: Int) {
-        holder.text(R.id.tv_Title, item.title)
-        holder.text(R.id.tv_Summary, item.summary)
+        holder.text(R.id.pref_title, item.title)
+        holder.text(R.id.pref_summary, item.summary)
         holder.click(R.id.itemLayout) {
             MaterialDialog(it.context).show {
                 title(text = item.title)
@@ -35,11 +38,12 @@ class PrefEditTextItemViewBinder : AbstractItemViewBinder<PrefEditTextItem>() {
                             val oldSummary = item.summary
                             item.summary = text.toString()
                             if (item.callback(item, position)) {
-                                holder.text(R.id.tv_Summary, item.summary)
+                                holder.text(R.id.pref_summary, item.summary)
                             } else {
                                 item.summary = oldSummary
                             }
-                        })
+                        }
+                )
             }
         }
     }

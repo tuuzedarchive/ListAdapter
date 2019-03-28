@@ -4,7 +4,7 @@
     style="@style/Prefs_ListItem_Category">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_Title"
+        android:id="@+id/pref_title"
         style="@style/Prefs_ListItem_Category_Text"
         tools:text="Category" />
 
