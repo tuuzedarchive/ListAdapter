@@ -34,6 +34,7 @@ class PrefEditTextItemViewBinder(
                         maxLength = item.maxLength,
                         prefill = item.summary,
                         inputType = item.inputType,
+                        allowEmpty = item.allowEmpty,
                         callback = { _, text ->
                             val oldSummary = item.summary
                             item.summary = text.toString()
