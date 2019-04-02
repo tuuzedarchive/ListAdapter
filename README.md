@@ -2,19 +2,19 @@
 
 
 
-## recyclerview-adapter-core
+## adapter
 
 [ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/adapter/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/adapter/_latestVersion)
 
-## recyclerview-adapter-loadmore
+## loadmore
 
 [ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/loadmore/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/loadmore/_latestVersion)
 
-## recyclerview-adapter-pageable
+## pageable
 
 [ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/pageable/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/pageable/_latestVersion)
 
-## recyclerview-adapter-prefs
+## prefs
 
 [ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/prefs/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/prefs/_latestVersion)
 
