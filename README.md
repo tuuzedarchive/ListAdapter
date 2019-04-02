@@ -4,15 +4,19 @@
 
 ## recyclerview-adapter-core
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-core/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-core/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/adapter/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/adapter/_latestVersion)
 
 ## recyclerview-adapter-loadmore
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-loadmore/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-loadmore/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/loadmore/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/loadmore/_latestVersion)
+
+## recyclerview-adapter-pageable
+
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/pageable/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/pageable/_latestVersion)
 
 ## recyclerview-adapter-prefs
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-prefs/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-prefs/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/prefs/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/prefs/_latestVersion)
 
 
 #### 添加依赖
