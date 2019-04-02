@@ -37,17 +37,18 @@ fun RecyclerViewAdapter.withLoadMore(
 object LoadMore {
 
     @JvmOverloads
-    fun with(recyclerView: RecyclerView,
-             loadMoreState: LoadMoreState = LoadMoreState(),
-             enableLoadMore: Boolean = true,
-             enableShowNoMore: Boolean = true,
-             footerView: View? = null,
-             noMoreView: View? = null,
-             loadFailedView: View? = null,
-             @LayoutRes footerViewLayoutRes: Int = View.NO_ID,
-             @LayoutRes noMoreViewLayoutRes: Int = View.NO_ID,
-             @LayoutRes loadFailedViewLayoutRes: Int = View.NO_ID,
-             listener: OnLoadMoreListener
+    fun with(
+            recyclerView: RecyclerView,
+            loadMoreState: LoadMoreState,
+            enableLoadMore: Boolean = true,
+            enableShowNoMore: Boolean = true,
+            footerView: View? = null,
+            noMoreView: View? = null,
+            loadFailedView: View? = null,
+            @LayoutRes footerViewLayoutRes: Int = View.NO_ID,
+            @LayoutRes noMoreViewLayoutRes: Int = View.NO_ID,
+            @LayoutRes loadFailedViewLayoutRes: Int = View.NO_ID,
+            listener: OnLoadMoreListener
     ) {
         val adapter = recyclerView.adapter
                 ?: throw NullPointerException("recyclerView.adapter == null")

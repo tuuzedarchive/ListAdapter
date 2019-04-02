@@ -1,4 +1,6 @@
-include ':sample',
-        ':core',
-        ':prefs',
-        ':loadmore'
+include ':adapter'
+include ':loadmore'
+include ':prefs'
+include ':pageable'
+
+include ':sample'

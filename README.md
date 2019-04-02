@@ -15,7 +15,6 @@
 [ ![Download](https://api.bintray.com/packages/tuuzed/maven/recyclerview-adapter-prefs/images/download.svg) ](https://bintray.com/tuuzed/maven/recyclerview-adapter-prefs/_latestVersion)
 
 
-
 #### 添加依赖
 
 ``` groovy
@@ -24,9 +23,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-core:latest.release'
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-loadmore:latest.release'
-    implementation 'com.tuuzed.androidx:recyclerview-adapter-prefs:latest.release'
+    implementation 'com.tuuzed.androidx.recyclerview:adapter:latest.release'
+    implementation 'com.tuuzed.androidx.recyclerview:loadmore:latest.release'
+    implementation 'com.tuuzed.androidx.recyclerview:pageable:latest.release'
+    implementation 'com.tuuzed.androidx.recyclerview:prefs:latest.release'
 }
 ```
 

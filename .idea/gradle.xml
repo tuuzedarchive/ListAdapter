@@ -8,8 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/adapter" />
             <option value="$PROJECT_DIR$/loadmore" />
+            <option value="$PROJECT_DIR$/pageable" />
             <option value="$PROJECT_DIR$/prefs" />
             <option value="$PROJECT_DIR$/sample" />
           </set>

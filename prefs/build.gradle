@@ -7,11 +7,10 @@ group = rootProject.group
 version = rootProject.version
 
 android {
-    compileSdkVersion 28
-
+    compileSdkVersion compileSdk
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 1
         versionName version
 
@@ -32,10 +31,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
-    implementation 'com.google.android.material:material:1.1.0-alpha04'
+    implementation 'com.google.android.material:material:1.1.0-alpha05'
     implementation 'com.afollestad.material-dialogs:core:2.5.0'
     implementation 'com.afollestad.material-dialogs:input:2.5.0'
-    api project(":core")
+    api project(':adapter')
 
     // 单元测试
     testImplementation 'junit:junit:4.12'
