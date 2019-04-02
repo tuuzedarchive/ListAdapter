@@ -23,7 +23,7 @@
 
 ``` groovy
 repositories {
-    maven { url 'https://dl.bintray.com/tuuzed/maven' }
+    maven { url 'https://dl.bintray.com/tuuzed/recyclerview' }
 }
 
 dependencies {
