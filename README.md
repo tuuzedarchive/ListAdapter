@@ -4,19 +4,19 @@
 
 ## adapter
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/adapter/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/adapter/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Aadapter/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Aadapter/_latestVersion)
 
 ## loadmore
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/loadmore/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/loadmore/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Aloadmore/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Aloadmore/_latestVersion)
 
 ## pageable
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/pageable/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/pageable/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Apageable/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Apageable/_latestVersion)
 
 ## prefs
 
-[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/prefs/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/prefs/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Aprefs/images/download.svg) ](https://bintray.com/tuuzed/recyclerview/com.tuuzed.androidx.recyclerview%3Aprefs/_latestVersion)
 
 
 #### 添加依赖
