@@ -22,7 +22,7 @@ class PrefCheckBoxItemViewBinder(
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
         holder.find<CompoundButton>(R.id.pref_checkbox_widget).isChecked = item.checked
-        holder.click(R.id.itemLayout) {
+        holder.click(R.id.pref_item_layout) {
             val oldChecked = item.checked
             item.checked = !item.checked
             if (item.callback(item, position)) {

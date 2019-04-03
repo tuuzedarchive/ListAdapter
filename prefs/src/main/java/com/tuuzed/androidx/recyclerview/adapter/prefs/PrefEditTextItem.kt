@@ -26,7 +26,7 @@ class PrefEditTextItemViewBinder(
     override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefEditTextItem, position: Int) {
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
-        holder.click(R.id.itemLayout) {
+        holder.click(R.id.pref_item_layout) {
             MaterialDialog(it.context).show {
                 title(text = item.title)
                 input(

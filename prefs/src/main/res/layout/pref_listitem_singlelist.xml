@@ -4,7 +4,7 @@
     style="@style/Prefs_ListItem_Root">
 
     <LinearLayout
-        android:id="@+id/itemLayout"
+        android:id="@+id/pref_item_layout"
         style="@style/Prefs_ListItem_ItemLayout"
         android:orientation="vertical">
 
