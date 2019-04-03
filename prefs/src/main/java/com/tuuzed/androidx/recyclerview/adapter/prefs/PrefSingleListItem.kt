@@ -23,7 +23,7 @@ class PrefSingleListItemViewBinder(
     override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefSingleListItem, position: Int) {
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
-        holder.click(R.id.itemLayout) { v ->
+        holder.click(R.id.pref_item_layout) { v ->
             item.itemsLoader { items ->
                 MaterialDialog(v.context).show {
                     title(text = item.title)
