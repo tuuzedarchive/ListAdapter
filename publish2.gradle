@@ -39,7 +39,8 @@ publish {
     bintrayUser = System.getenv('BINTRAY_USER')
     bintrayKey = System.getenv('BINTRAY_API_KEY')
     userOrg = 'tuuzed'
-    repoName = 'recyclerview'
+    repoName = 'maven'
+    repoName = "com.tuuzed.androidx.recyclerview:${project.name}"
     dryRun = false
     override = true
     groupId = pomMetadata.groupId

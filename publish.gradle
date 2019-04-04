@@ -6,8 +6,8 @@ group = project.group ?: rootProject.group
 version = project.version ?: rootProject.version
 
 def siteUrl = "https://github.com/tuuzed/recyclerview-adapter"
-def gitUrl = "https://github.com/tuuzed/recyclerview-adapter.git"
-def issueUrl = "https://github.com/tuuzed/recyclerview-adapter/issues"
+def gitUrl = "${siteUrl}.git"
+def issueUrl = "${siteUrl}/issues"
 
 bintray {
     user = System.getenv('BINTRAY_USER')
@@ -15,9 +15,9 @@ bintray {
 
     configurations = ['archives'] //When uploading configuration files
     pkg {
-        repo = 'recyclerview'
-        name = 'com.tuuzed.androidx.recyclerview:' + project.name
-        desc = 'Recyclerview adapter'
+        repo = 'maven'
+        name = "com.tuuzed.androidx.recyclerview:${project.name}"
+        desc = 'Recyclerview Adapter'
         websiteUrl = siteUrl
         issueTrackerUrl = issueUrl
         vcsUrl = gitUrl
@@ -33,7 +33,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name group + ':' + project.name
+                name "$group:${project.name}"
                 url siteUrl
                 licenses {
                     license {
@@ -52,7 +52,6 @@ install {
                     connection gitUrl
                     developerConnection gitUrl
                     url siteUrl
-
                 }
             }
         }
@@ -68,7 +67,7 @@ task sourcesJar(type: Jar) {
 //     source = android.sourceSets.main.java.srcDirs
 //     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 // }
-//
+
 // task javadocJar(type: Jar, dependsOn: javadoc) {
 //     classifier = 'javadoc'
 //     from javadoc.destinationDir
