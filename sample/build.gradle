@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion compileSdk
     defaultConfig {
-        applicationId "com.tuuzed.androidx.recyclerview.adapter.sample"
+        applicationId "com.tuuzed.recyclerview.adapter.sample"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
         versionCode 1
