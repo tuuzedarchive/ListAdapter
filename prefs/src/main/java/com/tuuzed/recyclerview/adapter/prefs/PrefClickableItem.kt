@@ -12,7 +12,7 @@ data class PrefClickableItem(
         var click: PrefClickableItemClick = { _, _ -> true }
 )
 
-class PrefClickableItemViewBinder(
+open class PrefClickableItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_clickable
 ) : AbstractItemViewBinder<PrefClickableItem>() {
     override fun getLayoutId() = layoutId

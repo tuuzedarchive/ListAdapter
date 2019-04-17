@@ -8,7 +8,7 @@ data class PrefCategoryItem(
         var title: String = ""
 )
 
-class PrefCategoryItemViewBinder(
+open class PrefCategoryItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_category
 ) : AbstractItemViewBinder<PrefCategoryItem>() {
     override fun getLayoutId() = layoutId

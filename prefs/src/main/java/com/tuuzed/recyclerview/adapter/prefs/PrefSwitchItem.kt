@@ -12,7 +12,7 @@ data class PrefSwitchItem(
         var callback: PrefItemCallback<PrefSwitchItem> = { _, _ -> true }
 )
 
-class PrefSwitchItemViewBinder(
+open class PrefSwitchItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_switch
 ) : AbstractItemViewBinder<PrefSwitchItem>() {
     override fun getLayoutId() = layoutId

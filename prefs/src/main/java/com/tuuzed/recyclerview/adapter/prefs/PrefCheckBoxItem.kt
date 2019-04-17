@@ -13,7 +13,7 @@ data class PrefCheckBoxItem(
         var callback: PrefItemCallback<PrefCheckBoxItem> = { _, _ -> true }
 )
 
-class PrefCheckBoxItemViewBinder(
+open class PrefCheckBoxItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_checkbox
 ) : AbstractItemViewBinder<PrefCheckBoxItem>() {
     override fun getLayoutId() = layoutId

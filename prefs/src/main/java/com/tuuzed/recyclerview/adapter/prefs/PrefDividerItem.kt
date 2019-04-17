@@ -6,7 +6,7 @@ import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
 object PrefDividerItem
 
-class PrefDividerItemViewBinder(
+open class PrefDividerItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_divider
 ) : AbstractItemViewBinder<PrefDividerItem>() {
     override fun getLayoutId() = layoutId

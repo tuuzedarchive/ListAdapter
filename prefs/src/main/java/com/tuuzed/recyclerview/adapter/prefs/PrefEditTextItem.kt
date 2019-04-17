@@ -18,7 +18,7 @@ data class PrefEditTextItem(
         var callback: PrefItemCallback<PrefEditTextItem> = { _, _ -> true }
 )
 
-class PrefEditTextItemViewBinder(
+open class PrefEditTextItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_edittext
 ) : AbstractItemViewBinder<PrefEditTextItem>() {
     override fun getLayoutId() = layoutId
