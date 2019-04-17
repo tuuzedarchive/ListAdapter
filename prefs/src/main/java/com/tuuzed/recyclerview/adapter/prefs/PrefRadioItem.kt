@@ -1,11 +1,12 @@
 package com.tuuzed.recyclerview.adapter.prefs
 
+import android.view.View
 import android.widget.CompoundButton
 import androidx.annotation.LayoutRes
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
-data class PrefRadioItem(
+open class PrefRadioItem(
         var title: String = "",
         var summary: String = "",
         var checked: Boolean = false,
@@ -21,14 +22,16 @@ open class PrefRadioItemViewBinder(
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
         holder.find<CompoundButton>(R.id.pref_radio_widget).isChecked = item.checked
-        holder.click(R.id.pref_item_layout) {
-            val oldChecked = item.checked
-            item.checked = !item.checked
-            if (item.callback(item, position)) {
-                holder.find<CompoundButton>(R.id.pref_radio_widget).isChecked = item.checked
-            } else {
-                item.checked = oldChecked
-            }
+        holder.click(R.id.pref_item_layout) { handleItemLayoutClick(it, holder, item, position) }
+    }
+
+    open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: PrefRadioItem, position: Int) {
+        val oldChecked = item.checked
+        item.checked = !item.checked
+        if (item.callback(item, position)) {
+            holder.find<CompoundButton>(R.id.pref_switch_widget).isChecked = item.checked
+        } else {
+            item.checked = oldChecked
         }
     }
 }

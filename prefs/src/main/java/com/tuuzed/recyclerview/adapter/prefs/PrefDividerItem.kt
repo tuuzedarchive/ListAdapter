@@ -11,6 +11,5 @@ open class PrefDividerItemViewBinder(
 ) : AbstractItemViewBinder<PrefDividerItem>() {
     override fun getLayoutId() = layoutId
 
-    override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefDividerItem, position: Int) {
-    }
+    override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefDividerItem, position: Int) {}
 }
