@@ -9,12 +9,12 @@ open class PrefGeneralItem(
         var summary: String = ""
 )
 
-open class PrefGeneralItemViewBinder(
+open class PrefGeneralItemViewBinder<in T : PrefGeneralItem>(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_general
-) : AbstractItemViewBinder<PrefGeneralItem>() {
+) : AbstractItemViewBinder<T>() {
     override fun getLayoutId() = layoutId
 
-    override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefGeneralItem, position: Int) {
+    override fun onBindViewHolder(holder: CommonItemViewHolder, item: T, position: Int) {
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
     }

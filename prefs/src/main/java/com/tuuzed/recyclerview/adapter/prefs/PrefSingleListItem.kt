@@ -16,18 +16,18 @@ open class PrefSingleListItem(
         var callback: PrefItemCallback<PrefSingleListItem> = { _, _ -> true }
 )
 
-open class PrefSingleListItemViewBinder(
+open class PrefSingleListItemViewBinder<in T : PrefSingleListItem>(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_singlelist
-) : AbstractItemViewBinder<PrefSingleListItem>() {
+) : AbstractItemViewBinder<T>() {
     override fun getLayoutId() = layoutId
 
-    override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefSingleListItem, position: Int) {
+    override fun onBindViewHolder(holder: CommonItemViewHolder, item: T, position: Int) {
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
         holder.click(R.id.pref_item_layout) { handleItemLayoutClick(it, holder, item, position) }
     }
 
-    open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: PrefSingleListItem, position: Int) {
+    open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: T, position: Int) {
         item.itemsLoader { items ->
             MaterialDialog(view.context).show {
                 title(text = item.title)
