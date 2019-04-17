@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         cxt = this
         setContentView(R.layout.main_act)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        listAdapter = RecyclerViewAdapter.with(recyclerView).withPrefs().prefDsl {
-            prefClickable {
+        listAdapter = RecyclerViewAdapter.with(recyclerView).withPrefs().dslPref {
+            clickable {
                 title = "Feed List"
                 summary = "Feed List"
                 click = { _, _ ->
@@ -30,39 +30,39 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
             }
-            prefCategory {
+            category {
                 title = "Prefs"
             }
-            prefGeneral {
+            general {
                 title = "General"
                 summary = "General#summary"
             }
-            prefEditText {
+            editText {
                 title = "EditText"
                 summary = "EditText#summary"
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             }
-            prefEditText {
+            editText {
                 title = "EditText"
                 summary = "EditText#summary"
                 allowEmpty = true
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             }
-            prefDivider {}
-            prefCheckBox {
+            divider {}
+            checkBox {
                 title = "CheckBox"
                 summary = "CheckBox#summary"
             }
-            prefSwitch {
+            switch {
                 title = "Switch"
                 summary = "Switch#summary"
             }
-            prefRadio {
+            radio {
                 title = "Radio"
                 summary = "Radio#summary"
             }
-            prefDivider {}
-            prefSingleList {
+            divider {}
+            singleList {
                 title = "SingleList"
                 summary = "SingleList#summary"
                 itemsLoader = {
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                     ))
                 }
             }
-            prefMultiList {
+            multiList {
                 title = "MultiList"
                 summary = "MultiList#summary"
                 itemsLoader = {

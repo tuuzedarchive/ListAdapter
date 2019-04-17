@@ -1,5 +1,6 @@
 package com.tuuzed.recyclerview.adapter.prefs
 
+import android.view.View
 import androidx.annotation.LayoutRes
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
@@ -7,7 +8,7 @@ import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 import java.util.*
 
-data class PrefMultiListItem(
+open class PrefMultiListItem(
         var title: String = "",
         var summary: String = "",
         var itemsLoader: ItemsLoader = { it(emptyList()) },
@@ -26,41 +27,43 @@ open class PrefMultiListItemViewBinder(
     override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefMultiListItem, position: Int) {
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
-        holder.click(R.id.pref_item_layout) { v ->
+        holder.click(R.id.pref_item_layout) { handleItemLayoutClick(it, holder, item, position) }
+    }
 
-            item.itemsLoader { items ->
-                val initialSelection = ArrayList<Int>()
-                items.forEachIndexed { index, any ->
-                    if (item.checkedItems.contains(any)) {
-                        initialSelection.add(index)
-                    }
+    open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: PrefMultiListItem, position: Int) {
+        item.itemsLoader { items ->
+            val initialSelection = ArrayList<Int>()
+            items.forEachIndexed { index, any ->
+                if (item.checkedItems.contains(any)) {
+                    initialSelection.add(index)
                 }
-                MaterialDialog(v.context).show {
-                    title(text = item.title)
-                    noAutoDismiss()
-                    listItemsMultiChoice(
-                            items = items.map { item.itemToString(it) },
-                            allowEmptySelection = item.allowEmptySelection,
-                            initialSelection = initialSelection.toIntArray(),
-                            selection = { _, indices, _ ->
-                                val oldCheckedItems = item.checkedItems
-                                val oldSummary = item.summary
-                                item.checkedItems = items.filterIndexed { index, _ -> indices.contains(index) }
-                                item.summary = item.checkedItems.joinToString(item.itemSeparator) { item.itemToString(it) }
-                                if (item.callback(item, position)) {
-                                    holder.text(R.id.pref_summary, item.summary)
-                                } else {
-                                    item.checkedItems = oldCheckedItems
-                                    item.summary = oldSummary
-                                }
-                            }
-                    )
-                    positiveButton { dismiss() }
-                    negativeButton { dismiss() }
-                }
-
             }
+            MaterialDialog(view.context).show {
+                title(text = item.title)
+                noAutoDismiss()
+                listItemsMultiChoice(
+                        items = items.map { item.itemToString(it) },
+                        allowEmptySelection = item.allowEmptySelection,
+                        initialSelection = initialSelection.toIntArray(),
+                        selection = { _, indices, _ ->
+                            val oldCheckedItems = item.checkedItems
+                            val oldSummary = item.summary
+                            item.checkedItems = items.filterIndexed { index, _ -> indices.contains(index) }
+                            item.summary = item.checkedItems.joinToString(item.itemSeparator) { item.itemToString(it) }
+                            if (item.callback(item, position)) {
+                                holder.text(R.id.pref_summary, item.summary)
+                            } else {
+                                item.checkedItems = oldCheckedItems
+                                item.summary = oldSummary
+                            }
+                        }
+                )
+                positiveButton { dismiss() }
+                negativeButton { dismiss() }
+            }
+
         }
     }
+
 
 }

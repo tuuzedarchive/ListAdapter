@@ -4,7 +4,7 @@ import androidx.annotation.LayoutRes
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
-data class PrefGeneralItem(
+open class PrefGeneralItem(
         var title: String = "",
         var summary: String = ""
 )

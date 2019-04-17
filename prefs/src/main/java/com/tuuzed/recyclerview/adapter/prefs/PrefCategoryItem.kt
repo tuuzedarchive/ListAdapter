@@ -4,7 +4,7 @@ import androidx.annotation.LayoutRes
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
-data class PrefCategoryItem(
+open class PrefCategoryItem(
         var title: String = ""
 )
 
