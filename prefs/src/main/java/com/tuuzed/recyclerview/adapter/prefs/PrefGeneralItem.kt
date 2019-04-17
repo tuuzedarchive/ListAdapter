@@ -9,7 +9,7 @@ data class PrefGeneralItem(
         var summary: String = ""
 )
 
-class PrefGeneralItemViewBinder(
+open class PrefGeneralItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_general
 ) : AbstractItemViewBinder<PrefGeneralItem>() {
     override fun getLayoutId() = layoutId

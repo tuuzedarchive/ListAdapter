@@ -15,7 +15,7 @@ data class PrefSingleListItem(
         var callback: PrefItemCallback<PrefSingleListItem> = { _, _ -> true }
 )
 
-class PrefSingleListItemViewBinder(
+open class PrefSingleListItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_singlelist
 ) : AbstractItemViewBinder<PrefSingleListItem>() {
     override fun getLayoutId() = layoutId

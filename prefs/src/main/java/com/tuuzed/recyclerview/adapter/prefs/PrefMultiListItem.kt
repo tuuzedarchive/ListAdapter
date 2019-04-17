@@ -18,7 +18,7 @@ data class PrefMultiListItem(
         var callback: PrefItemCallback<PrefMultiListItem> = { _, _ -> true }
 )
 
-class PrefMultiListItemViewBinder(
+open class PrefMultiListItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_multilist
 ) : AbstractItemViewBinder<PrefMultiListItem>() {
     override fun getLayoutId() = layoutId

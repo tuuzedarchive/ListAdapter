@@ -12,7 +12,7 @@ data class PrefRadioItem(
         var callback: PrefItemCallback<PrefRadioItem> = { _, _ -> true }
 )
 
-class PrefRadioItemViewBinder(
+open class PrefRadioItemViewBinder(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_radio
 ) : AbstractItemViewBinder<PrefRadioItem>() {
     override fun getLayoutId() = layoutId

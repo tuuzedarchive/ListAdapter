@@ -16,3 +16,18 @@ inline fun RecyclerViewAdapter.prefSingleList(func: PrefSingleListItem.() -> Uni
 inline fun RecyclerViewAdapter.prefMultiList(func: PrefMultiListItem.() -> Unit) = this.appendItems(PrefMultiListItem().apply(func))
 inline fun RecyclerViewAdapter.prefDivider(func: PrefDividerItem.() -> Unit) = this.appendItems(PrefDividerItem.apply(func))
 
+
+class PrefDSL(val adapter: RecyclerViewAdapter)
+
+inline fun RecyclerViewAdapter.dslPref(func: PrefDSL.() -> Unit) = this.apply { func(PrefDSL(this)) }
+
+inline fun PrefDSL.category(func: PrefCategoryItem.() -> Unit) = this.adapter.appendItems(PrefCategoryItem().apply(func))
+inline fun PrefDSL.general(func: PrefGeneralItem.() -> Unit) = this.adapter.appendItems(PrefGeneralItem().apply(func))
+inline fun PrefDSL.clickable(func: PrefClickableItem.() -> Unit) = this.adapter.appendItems(PrefClickableItem().apply(func))
+inline fun PrefDSL.editText(func: PrefEditTextItem.() -> Unit) = this.adapter.appendItems(PrefEditTextItem().apply(func))
+inline fun PrefDSL.checkBox(func: PrefCheckBoxItem.() -> Unit) = this.adapter.appendItems(PrefCheckBoxItem().apply(func))
+inline fun PrefDSL.switch(func: PrefSwitchItem.() -> Unit) = this.adapter.appendItems(PrefSwitchItem().apply(func))
+inline fun PrefDSL.radio(func: PrefRadioItem.() -> Unit) = this.adapter.appendItems(PrefRadioItem().apply(func))
+inline fun PrefDSL.singleList(func: PrefSingleListItem.() -> Unit) = this.adapter.appendItems(PrefSingleListItem().apply(func))
+inline fun PrefDSL.multiList(func: PrefMultiListItem.() -> Unit) = this.adapter.appendItems(PrefMultiListItem().apply(func))
+inline fun PrefDSL.divider(func: PrefDividerItem.() -> Unit) = this.adapter.appendItems(PrefDividerItem.apply(func))
