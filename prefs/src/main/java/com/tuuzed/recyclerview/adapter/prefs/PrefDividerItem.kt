@@ -4,12 +4,13 @@ import androidx.annotation.LayoutRes
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
-object PrefDividerItem
+open class PrefDividerItem
 
-open class PrefDividerItemViewBinder(
+open class PrefDividerItemViewBinder<in T : PrefDividerItem>(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_divider
-) : AbstractItemViewBinder<PrefDividerItem>() {
+) : AbstractItemViewBinder<T>() {
     override fun getLayoutId() = layoutId
 
-    override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefDividerItem, position: Int) {}
+    override fun onBindViewHolder(holder: CommonItemViewHolder, item: T, position: Int) {}
+
 }

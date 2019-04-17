@@ -13,19 +13,19 @@ open class PrefRadioItem(
         var callback: PrefItemCallback<PrefRadioItem> = { _, _ -> true }
 )
 
-open class PrefRadioItemViewBinder(
+open class PrefRadioItemViewBinder<in T : PrefRadioItem>(
         @LayoutRes private val layoutId: Int = R.layout.pref_listitem_radio
-) : AbstractItemViewBinder<PrefRadioItem>() {
+) : AbstractItemViewBinder<T>() {
     override fun getLayoutId() = layoutId
 
-    override fun onBindViewHolder(holder: CommonItemViewHolder, item: PrefRadioItem, position: Int) {
+    override fun onBindViewHolder(holder: CommonItemViewHolder, item: T, position: Int) {
         holder.text(R.id.pref_title, item.title)
         holder.text(R.id.pref_summary, item.summary)
         holder.find<CompoundButton>(R.id.pref_radio_widget).isChecked = item.checked
         holder.click(R.id.pref_item_layout) { handleItemLayoutClick(it, holder, item, position) }
     }
 
-    open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: PrefRadioItem, position: Int) {
+    open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: T, position: Int) {
         val oldChecked = item.checked
         item.checked = !item.checked
         if (item.callback(item, position)) {
