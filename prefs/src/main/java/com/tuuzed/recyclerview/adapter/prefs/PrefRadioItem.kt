@@ -29,7 +29,7 @@ open class PrefRadioItemViewBinder<in T : PrefRadioItem>(
         val oldChecked = item.checked
         item.checked = !item.checked
         if (item.callback(item, position)) {
-            holder.find<CompoundButton>(R.id.pref_switch_widget).isChecked = item.checked
+            holder.find<CompoundButton>(R.id.pref_radio_widget).isChecked = item.checked
         } else {
             item.checked = oldChecked
         }

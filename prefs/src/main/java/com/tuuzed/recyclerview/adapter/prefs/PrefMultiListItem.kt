@@ -2,8 +2,8 @@ package com.tuuzed.recyclerview.adapter.prefs
 
 import android.view.View
 import androidx.annotation.LayoutRes
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItemsMultiChoice
+import com.tuuzed.androidx.exdialog.ExDialog
+import com.tuuzed.androidx.exdialog.ext.multiChoiceItems
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 import java.util.*
@@ -38,30 +38,31 @@ open class PrefMultiListItemViewBinder<in T : PrefMultiListItem>(
                     initialSelection.add(index)
                 }
             }
-            MaterialDialog(view.context).show {
-                title(text = item.title)
-                noAutoDismiss()
-                listItemsMultiChoice(
-                        items = items.map { item.itemToString(it) },
-                        allowEmptySelection = item.allowEmptySelection,
-                        initialSelection = initialSelection.toIntArray(),
-                        selection = { _, indices, _ ->
-                            val oldCheckedItems = item.checkedItems
-                            val oldSummary = item.summary
-                            item.checkedItems = items.filterIndexed { index, _ -> indices.contains(index) }
-                            item.summary = item.checkedItems.joinToString(item.itemSeparator) { item.itemToString(it) }
-                            if (item.callback(item, position)) {
-                                holder.text(R.id.pref_summary, item.summary)
-                            } else {
-                                item.checkedItems = oldCheckedItems
-                                item.summary = oldSummary
-                            }
+            ExDialog(view.context).show {
+                multiChoiceItems<Any> {
+                    title(text = item.title)
+                    items(items, initialSelection)
+                    onSelectedItemChanged { _, _, selectedItems ->
+                        if (!item.allowEmptySelection) {
+                            positiveButtonEnable(selectedItems.isNotEmpty())
                         }
-                )
-                positiveButton { dismiss() }
-                negativeButton { dismiss() }
+                    }
+                    callback { _, _, selectedItems ->
+                        val oldCheckedItems = item.checkedItems
+                        val oldSummary = item.summary
+                        item.checkedItems = selectedItems
+                        item.summary = item.checkedItems.joinToString(item.itemSeparator) { item.itemToString(it) }
+                        if (item.callback(item, position)) {
+                            holder.text(R.id.pref_summary, item.summary)
+                        } else {
+                            item.checkedItems = oldCheckedItems
+                            item.summary = oldSummary
+                        }
+                    }
+                    negativeButton()
+                    positiveButton()
+                }
             }
-
         }
     }
 

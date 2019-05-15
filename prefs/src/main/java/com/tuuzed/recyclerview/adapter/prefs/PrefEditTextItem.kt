@@ -3,8 +3,8 @@ package com.tuuzed.recyclerview.adapter.prefs
 import android.text.InputType
 import android.view.View
 import androidx.annotation.LayoutRes
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.input.input
+import com.tuuzed.androidx.exdialog.ExDialog
+import com.tuuzed.androidx.exdialog.ext.input
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
@@ -31,24 +31,30 @@ open class PrefEditTextItemViewBinder<in T : PrefEditTextItem>(
     }
 
     open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: T, position: Int) {
-        MaterialDialog(view.context).show {
-            title(text = item.title)
-            input(
-                    hint = item.hint,
-                    maxLength = item.maxLength,
-                    prefill = item.summary,
-                    inputType = item.inputType,
-                    allowEmpty = item.allowEmpty,
-                    callback = { _, text ->
-                        val oldSummary = item.summary
-                        item.summary = text.toString()
-                        if (item.callback(item, position)) {
-                            holder.text(R.id.pref_summary, item.summary)
-                        } else {
-                            item.summary = oldSummary
-                        }
+
+        ExDialog(view.context).show {
+            input {
+                title(text = item.title)
+                hint(item.hint)
+                maxLength(item.maxLength)
+                prefill(text = item.summary)
+                inputType(item.inputType)
+                onTextChanged { _, text ->
+                    if (!item.allowEmpty) {
+                        positiveButtonEnable(text.isNotEmpty())
                     }
-            )
+                }
+                callback { _, text ->
+                    val oldSummary = item.summary
+                    item.summary = text.toString()
+                    if (item.callback(item, position)) {
+                        holder.text(R.id.pref_summary, item.summary)
+                    } else {
+                        item.summary = oldSummary
+                    }
+                }
+                positiveButton()
+            }
         }
     }
 }
