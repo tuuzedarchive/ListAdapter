@@ -30,7 +30,7 @@ allprojects {
 }
 
 group = 'com.tuuzed.recyclerview'
-version = '2.1.0-alpha01'
+version = '2.1.0-alpha02'
 
 task clean(type: Delete) {
     delete rootProject.buildDir

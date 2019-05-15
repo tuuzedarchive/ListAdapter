@@ -33,25 +33,24 @@ open class PrefEditTextItemViewBinder<in T : PrefEditTextItem>(
     open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: T, position: Int) {
 
         ExDialog(view.context).show {
-            input {
-                title(text = item.title)
-                hint(item.hint)
-                maxLength(item.maxLength)
-                prefill(text = item.summary)
-                inputType(item.inputType)
+            input(
+                    title = item.title,
+                    hint = item.hint,
+                    maxLength = item.maxLength,
+                    prefill = item.summary,
+                    inputType = item.inputType,
+                    callback = { _, text ->
+                        val oldSummary = item.summary
+                        item.summary = text.toString()
+                        if (item.callback(item, position)) {
+                            holder.text(R.id.pref_summary, item.summary)
+                        } else {
+                            item.summary = oldSummary
+                        }
+                    }
+            ) {
                 onTextChanged { _, text ->
-                    if (!item.allowEmpty) {
-                        positiveButtonEnable(text.isNotEmpty())
-                    }
-                }
-                callback { _, text ->
-                    val oldSummary = item.summary
-                    item.summary = text.toString()
-                    if (item.callback(item, position)) {
-                        holder.text(R.id.pref_summary, item.summary)
-                    } else {
-                        item.summary = oldSummary
-                    }
+                    if (!item.allowEmpty) positiveButtonEnable(text.isNotEmpty())
                 }
                 positiveButton()
             }

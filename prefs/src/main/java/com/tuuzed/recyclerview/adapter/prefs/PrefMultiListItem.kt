@@ -39,24 +39,26 @@ open class PrefMultiListItemViewBinder<in T : PrefMultiListItem>(
                 }
             }
             ExDialog(view.context).show {
-                multiChoiceItems<Any> {
-                    title(text = item.title)
-                    items(items, initialSelection)
+                multiChoiceItems(
+                        title = item.title,
+                        items = items,
+                        selectedIndices = initialSelection,
+                        callback = { _, _, selectedItems ->
+                            val oldCheckedItems = item.checkedItems
+                            val oldSummary = item.summary
+                            item.checkedItems = selectedItems
+                            item.summary = item.checkedItems.joinToString(item.itemSeparator) { item.itemToString(it) }
+                            if (item.callback(item, position)) {
+                                holder.text(R.id.pref_summary, item.summary)
+                            } else {
+                                item.checkedItems = oldCheckedItems
+                                item.summary = oldSummary
+                            }
+                        }
+                ) {
                     onSelectedItemChanged { _, _, selectedItems ->
                         if (!item.allowEmptySelection) {
                             positiveButtonEnable(selectedItems.isNotEmpty())
-                        }
-                    }
-                    callback { _, _, selectedItems ->
-                        val oldCheckedItems = item.checkedItems
-                        val oldSummary = item.summary
-                        item.checkedItems = selectedItems
-                        item.summary = item.checkedItems.joinToString(item.itemSeparator) { item.itemToString(it) }
-                        if (item.callback(item, position)) {
-                            holder.text(R.id.pref_summary, item.summary)
-                        } else {
-                            item.checkedItems = oldCheckedItems
-                            item.summary = oldSummary
                         }
                     }
                     negativeButton()

@@ -30,23 +30,25 @@ open class PrefSingleListItemViewBinder<in T : PrefSingleListItem>(
     open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: T, position: Int) {
         item.itemsLoader { items ->
             ExDialog(view.context).show {
-                singleChoiceItems<Any>(toReadable = { item.itemToString(it) }) {
-                    title(text = item.title)
-                    items(items, items.indexOf(item.checkedItem))
-                    onSelectedItemChanged { dialog, _, selectedItem ->
-                        val oldCheckedItem = item.checkedItem
-                        val oldSummary = item.summary
-                        item.checkedItem = selectedItem
-                        item.summary = item.itemToString(item.checkedItem ?: "")
-                        if (item.callback(item, position)) {
-                            holder.text(R.id.pref_summary, item.summary)
-                        } else {
-                            item.checkedItem = oldCheckedItem
-                            item.summary = oldSummary
-                        }
-                        dialog.dismiss()
-                    }
-                }
+                singleChoiceItems(
+                        title = item.title,
+                        items = items,
+                        selectedIndex = items.indexOf(item.checkedItem),
+                        onSelectedItemChanged = { dialog, _, selectedItem ->
+                            val oldCheckedItem = item.checkedItem
+                            val oldSummary = item.summary
+                            item.checkedItem = selectedItem
+                            item.summary = item.itemToString(item.checkedItem ?: "")
+                            if (item.callback(item, position)) {
+                                holder.text(R.id.pref_summary, item.summary)
+                            } else {
+                                item.checkedItem = oldCheckedItem
+                                item.summary = oldSummary
+                            }
+                            dialog.dismiss()
+                        },
+                        toReadable = { item.itemToString(it) }
+                )
             }
         }
     }
