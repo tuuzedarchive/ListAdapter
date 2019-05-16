@@ -2,8 +2,8 @@ package com.tuuzed.recyclerview.adapter.prefs
 
 import android.view.View
 import androidx.annotation.LayoutRes
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.list.listItemsSingleChoice
+import com.tuuzed.androidx.exdialog.ExDialog
+import com.tuuzed.androidx.exdialog.ext.singleChoiceItems
 import com.tuuzed.recyclerview.adapter.AbstractItemViewBinder
 import com.tuuzed.recyclerview.adapter.CommonItemViewHolder
 
@@ -29,23 +29,25 @@ open class PrefSingleListItemViewBinder<in T : PrefSingleListItem>(
 
     open fun handleItemLayoutClick(view: View, holder: CommonItemViewHolder, item: T, position: Int) {
         item.itemsLoader { items ->
-            MaterialDialog(view.context).show {
-                title(text = item.title)
-                listItemsSingleChoice(
-                        items = items.map { item.itemToString(it) },
-                        initialSelection = items.indexOf(item.checkedItem),
-                        selection = { _, index, text ->
+            ExDialog(view.context).show {
+                singleChoiceItems(
+                        title = item.title,
+                        items = items,
+                        selectedIndex = items.indexOf(item.checkedItem),
+                        onSelectedItemChanged = { dialog, _, selectedItem ->
                             val oldCheckedItem = item.checkedItem
                             val oldSummary = item.summary
-                            item.checkedItem = items[index]
-                            item.summary = text
+                            item.checkedItem = selectedItem
+                            item.summary = item.itemToString(item.checkedItem ?: "")
                             if (item.callback(item, position)) {
                                 holder.text(R.id.pref_summary, item.summary)
                             } else {
                                 item.checkedItem = oldCheckedItem
                                 item.summary = oldSummary
                             }
-                        }
+                            dialog.dismiss()
+                        },
+                        toReadable = { item.itemToString(it) }
                 )
             }
         }
