@@ -1,77 +1,71 @@
 package com.tuuzed.recyclerview.adapter
 
 import android.view.ViewGroup
-import androidx.annotation.IntRange
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class RecyclerViewAdapter constructor(
-        var items: MutableList<Any>,
-        @IntRange(from = 1) initTypeCapacity: Int
+class RecyclerViewAdapter @JvmOverloads constructor(
+    var items: MutableList<Any> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    companion object {
+    companion object Factory {
 
         @JvmOverloads
         fun with(recyclerView: RecyclerView,
                  items: MutableList<Any> = mutableListOf(),
-                 @IntRange(from = 1) initTypeCapacity: Int = 16,
                  block: (RecyclerViewAdapter.() -> Unit)? = null
         ): RecyclerViewAdapter {
-            return RecyclerViewAdapter(items, initTypeCapacity).also {
+            return RecyclerViewAdapter(items).also {
                 it.with(recyclerView)
                 if (block != null) {
                     it.with(recyclerView, block)
                 }
             }
         }
-
     }
 
-    private val mItemTypePool: ItemTypePool = ItemTypePool(initTypeCapacity)
+    private val binders = mutableListOf<ItemTypeViewBinder<*, *>>()
+    private val types = mutableListOf<Class<*>>()
 
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
-        return mItemTypePool.indexOf(item.javaClass)
+        val type = item::class.java
+        return types.indexOf(type)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, indexViewType: Int): RecyclerView.ViewHolder {
-        val itemTypeViewBinder = mItemTypePool.findItemTypeViewBinder(indexViewType)
-        return itemTypeViewBinder.onCreateViewHolder(parent, indexViewType)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (binders.size < viewType - 1) {
+            throw IllegalStateException("Not viewType ($viewType) type.")
+        }
+        val binder = binders[viewType]
+        return binder.onCreateViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val indexViewType = getItemViewType(position)
+        val viewType = getItemViewType(position)
         val item = items[position]
-        mItemTypePool.findItemTypeViewBinder(indexViewType).onBindViewHolder(holder, item, position)
+
+        if (binders.size < viewType - 1) {
+            throw IllegalStateException("Not viewType ($viewType) type.")
+        }
+        @Suppress("UNCHECKED_CAST")
+        val binder = binders[viewType]
+            as ItemTypeViewBinder<Any, RecyclerView.ViewHolder>
+
+        binder.onBindViewHolder(holder, item, position)
     }
 
     override fun getItemCount(): Int = items.size
 
-    fun <T, VH : RecyclerView.ViewHolder> bind(itemType: Class<in T>, itemTypeViewBinder: ItemTypeViewBinder<T, VH>): RecyclerViewAdapter {
-        mItemTypePool.register(itemType, itemTypeViewBinder)
+    fun <T, VH : RecyclerView.ViewHolder> bind(type: Class<in T>, binder: ItemTypeViewBinder<T, VH>): RecyclerViewAdapter {
+        val index = types.indexOf(type)
+        if (index == -1) {
+            types.add(type)
+            binders.add(binder)
+        } else {
+            binders[index] = binder
+        }
         return this
-    }
-
-    fun <T, VH : RecyclerView.ViewHolder> bind(itemType: Class<T>, onCreateViewHolder: OnCreateViewHolder<VH>, onBindViewHolder: OnBindViewHolder<T, VH>): ItemTypeViewBinder<T, VH> {
-        val binder = object : ItemTypeViewBinder<T, VH> {
-            override fun onBindViewHolder(holder: VH, item: T, position: Int) = onBindViewHolder(holder, item, position)
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH = onCreateViewHolder(parent, viewType)
-        }
-        bind(itemType, binder)
-        return binder
-    }
-
-    fun <T> bind(itemType: Class<T>, @LayoutRes layoutId: Int, onBindViewHolder: OnBindViewHolder<T, CommonItemViewHolder>): ItemTypeViewBinder<T, CommonItemViewHolder> {
-        val binder = object : AbstractItemViewBinder<T>() {
-            override fun getLayoutId() = layoutId
-            override fun onBindViewHolder(holder: CommonItemViewHolder, item: T, position: Int) {
-                onBindViewHolder(holder, item, position)
-            }
-        }
-        bind(itemType, binder)
-        return binder
     }
 
     fun with(recyclerView: RecyclerView): RecyclerViewAdapter {
@@ -85,9 +79,9 @@ class RecyclerViewAdapter constructor(
         return this
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun setItems(items: List<*>): RecyclerViewAdapter {
         if (items is MutableList<*>) {
+            @Suppress("UNCHECKED_CAST")
             this.items = items as MutableList<Any>
         } else {
             this.items = mutableListOf()
@@ -96,8 +90,8 @@ class RecyclerViewAdapter constructor(
         return this
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun appendItems(items: List<*>): RecyclerViewAdapter {
+        @Suppress("UNCHECKED_CAST")
         this.items.addAll(items as List<Any>)
         return this
     }
