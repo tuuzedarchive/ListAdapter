@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -163,9 +164,7 @@ public class EditTextPreference extends Preference2 {
                 @NonNull final EditTextPreference preference,
                 final int position
         ) {
-            final View contentView = LayoutInflater.from(context).inflate(
-                    R.layout.preference_dialog_edittext, null, false
-            );
+            final View contentView = LayoutInflater.from(context).inflate(R.layout.preference_dialog_edittext, null, false);
             final MaterialEditText editText = contentView.findViewById(R.id.editText);
             final AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle(preference.getTitle())
@@ -179,13 +178,12 @@ public class EditTextPreference extends Preference2 {
                     })
                     .create();
             dialog.show();
+            @Nullable final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-            final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
             editText.setText(preference.summary);
             editText.setInputType(preference.inputType);
             if (preference.maxLength != -1) {
@@ -207,52 +205,46 @@ public class EditTextPreference extends Preference2 {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (preference.allowEmpty) {
-                        positiveButton.setEnabled(true);
-                    } else {
-                        positiveButton.setEnabled(!TextUtils.isEmpty(editText.getText()));
-                    }
+                    onPreferenceChanged(positiveButton, preference, editText);
                 }
-
             });
-            editText.requestFocus();
-            if (preference.allowEmpty) {
-                positiveButton.setEnabled(true);
-            } else {
-                positiveButton.setEnabled(!TextUtils.isEmpty(editText.getText()));
-            }
+            onPreferenceChanged(positiveButton, preference, editText);
             // 强制显示输入法
+            editText.requestFocus();
             editText.post(new Runnable() {
                 @Override
                 public void run() {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-                    }
+                    toggleSoftInput(editText, true);
                 }
             });
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    // 隐藏输入法
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    }
+                    toggleSoftInput(editText, false);
                 }
             });
             dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    // 隐藏输入法
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                    }
+                    toggleSoftInput(editText, false);
                 }
             });
-
         }
+
+        private void onPreferenceChanged(
+                Button positiveButton,
+                @NonNull EditTextPreference preference,
+                @NonNull MaterialEditText editText
+        ) {
+            if (positiveButton != null) {
+                if (preference.allowEmpty) {
+                    positiveButton.setEnabled(true);
+                } else {
+                    positiveButton.setEnabled(!TextUtils.isEmpty(editText.getText()));
+                }
+            }
+        }
+
 
         private void doCallback(@NonNull EditTextPreference preference, MaterialEditText editText, int position) {
             // old
@@ -267,6 +259,18 @@ public class EditTextPreference extends Preference2 {
                 setPreference(preference, position);
             } else {
                 preference.setSummary(oldSummary);
+            }
+        }
+
+        private void toggleSoftInput(@NonNull EditText editText, boolean show) {
+            final Context context = editText.getContext();
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                if (show) {
+                    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                } else {
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
             }
         }
 

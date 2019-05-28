@@ -166,13 +166,7 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
                         @Override
                         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                             checkedItems[which] = isChecked;
-                            if (positiveButton[0] != null) {
-                                if (preference.allowEmptySelection) {
-                                    positiveButton[0].setEnabled(true);
-                                } else {
-                                    positiveButton[0].setEnabled(hasTrue(checkedItems));
-                                }
-                            }
+                            onPreferenceChanged(positiveButton[0], preference, checkedItems);
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, null)
@@ -180,22 +174,29 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             doCallback(preference, position, checkedItems);
-
                         }
                     })
                     .create();
             dialog.show();
+            positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-            positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            if (positiveButton[0] != null) {
+            onPreferenceChanged(positiveButton[0], preference, checkedItems);
+        }
+
+        private <T> void onPreferenceChanged(
+                Button positiveButton,
+                @NonNull final MultiChoiceItemsPreference<T> preference,
+                @NonNull boolean[] checkedItems
+        ) {
+            if (positiveButton != null) {
                 if (preference.allowEmptySelection) {
-                    positiveButton[0].setEnabled(true);
+                    positiveButton.setEnabled(true);
                 } else {
-                    positiveButton[0].setEnabled(hasTrue(checkedItems));
+                    positiveButton.setEnabled(hasTrue(checkedItems));
                 }
             }
         }

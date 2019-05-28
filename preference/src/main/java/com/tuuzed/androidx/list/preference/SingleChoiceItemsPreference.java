@@ -165,13 +165,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                             checkedItem[0] = which;
                             // 需要再次确认
                             if (preference.needConfirm) {
-                                if (positiveButton[0] != null) {
-                                    if (preference.allowEmptySelection) {
-                                        positiveButton[0].setEnabled(true);
-                                    } else {
-                                        positiveButton[0].setEnabled(checkedItem[0] >= 0 && checkedItem[0] < preference.options.size());
-                                    }
-                                }
+                                onPreferenceChanged(positiveButton[0], preference, checkedItem[0]);
                             }
                             // 不需要再次确认
                             else {
@@ -194,17 +188,25 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                 dialog.setCanceledOnTouchOutside(true);
             }
             dialog.show();
+            positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-            positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            if (positiveButton[0] != null) {
+            onPreferenceChanged(positiveButton[0], preference, checkedItem[0]);
+        }
+
+        private <T> void onPreferenceChanged(
+                Button positiveButton,
+                @NonNull final SingleChoiceItemsPreference<T> preference,
+                int checkedItem
+        ) {
+            if (positiveButton != null) {
                 if (preference.allowEmptySelection) {
-                    positiveButton[0].setEnabled(true);
+                    positiveButton.setEnabled(true);
                 } else {
-                    positiveButton[0].setEnabled(checkedItem[0] >= 0 && checkedItem[0] < preference.options.size());
+                    positiveButton.setEnabled(checkedItem >= 0 && checkedItem < preference.options.size());
                 }
             }
         }
