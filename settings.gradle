@@ -1,6 +1,1 @@
-include ':adapter'
-include ':loadmore'
-include ':prefs'
-include ':pageable'
-
-include ':sample'
+include ':sample', ':adapter', ':pageable', ':loadmore', ':preference', ':preference-ktx', ':loadmore-ktx'

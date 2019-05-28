@@ -1,4 +1,4 @@
 <resources>
-    <string name="no_more"></string>
-    <string name="retry">click to retry</string>
+    <string name="no_more">No More</string>
+    <string name="retry">Click Retry</string>
 </resources>

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">RecyclerViewAdapter</string>
+    <string name="app_name">ListAdapter Sample</string>
+    <string name="change_theme">Change Theme</string>
 </resources>

@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_more">我是有底线的</string>
+
+    <string name="no_more">没有更多了</string>
     <string name="retry">点击重试</string>
+
 </resources>
