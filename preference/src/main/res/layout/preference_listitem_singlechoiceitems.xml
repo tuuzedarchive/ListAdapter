@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             style="@style/Preference_ListItem_Root">
+
+    <LinearLayout
+            android:id="@+id/preference_item_layout"
+            style="@style/Preference_ListItem_ItemLayout"
+            android:orientation="vertical">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/preference_title"
+                style="@style/Preference_ListItem_Title"
+                tools:text="Title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/preference_summary"
+                style="@style/Preference_ListItem_Summary"
+                tools:text="This Summary ."/>
+
+    </LinearLayout>
+
+</FrameLayout>

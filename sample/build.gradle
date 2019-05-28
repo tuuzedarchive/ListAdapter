@@ -1,15 +1,19 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'gitvc-gradle-plugin'
+
+group = rootProject.group
+version = rootProject.version
 
 android {
-    compileSdkVersion compileSdk
+    compileSdkVersion targetSdk
     defaultConfig {
-        applicationId "com.tuuzed.recyclerview.adapter.sample"
+        applicationId "com.tuuzed.androidx.listsample"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
-        versionCode 1
-        versionName "1.0"
+        versionCode GitVC.VERSION_CODE
+        versionName version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -22,20 +26,20 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
-
-    implementation project(':adapter')
+    // module
+    implementation project(":adapter")
     implementation project(":loadmore")
+    implementation project(":loadmore-ktx")
     implementation project(":pageable")
-    implementation project(":prefs")
-
-    // 单元测试
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test:monitor:1.1.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation project(":preference")
+    implementation project(":preference-ktx")
+    implementation deps.kotlin
+    implementation deps.appcompat
+    implementation deps.constraintlayout
+    implementation deps.core_ktx
+    implementation deps.material
+    // unit test
+    testImplementation deps.junit
+    androidTestImplementation deps.runner
+    androidTestImplementation deps.espresso_core
 }
