@@ -12,7 +12,7 @@ bintray {
 
     configurations = ['archives'] //When uploading configuration files
     pkg {
-        repo = 'unstable'
+        repo = 'maven'
         name = "$group:${project.name}"
         desc = 'Android RecyclerView Adapter'
         websiteUrl = siteUrl
