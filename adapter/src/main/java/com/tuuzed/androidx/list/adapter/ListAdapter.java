@@ -46,7 +46,6 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return this;
     }
 
-
     @NonNull
     public <T> ListAdapter bind(@NonNull Class<T> clazz, @NonNull ItemViewBinder<T, ? extends RecyclerView.ViewHolder> binder) {
         final int index = itemViewTypeList.indexOf(clazz);

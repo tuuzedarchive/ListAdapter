@@ -73,16 +73,20 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
             preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean oldChecked = preference.checked;
-                    preference.setChecked(!preference.checked);
-                    //noinspection unchecked
-                    if (preference.callback.invoke(preference, position)) {
-                        setPreference(preference, position);
-                    } else {
-                        preference.setChecked(oldChecked);
-                    }
+                    doCallback(preference, position);
                 }
             });
+        }
+
+        private void doCallback(@NonNull P preference, int position) {
+            boolean oldChecked = preference.checked;
+            preference.setChecked(!preference.checked);
+            //noinspection unchecked
+            if (preference.callback.invoke(preference, position)) {
+                setPreference(preference, position);
+            } else {
+                preference.setChecked(oldChecked);
+            }
         }
 
     }

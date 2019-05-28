@@ -62,5 +62,5 @@ allprojects {
 
 
 group = 'com.tuuzed.androidx.list'
-version = '3.0.0-alpha02'
+version = '3.0.0-alpha03'
 
