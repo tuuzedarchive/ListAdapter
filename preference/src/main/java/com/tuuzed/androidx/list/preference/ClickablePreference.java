@@ -1,8 +1,6 @@
 package com.tuuzed.androidx.list.preference;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,13 +32,14 @@ public class ClickablePreference extends Preference2 {
         listAdapter.bind(ClickablePreference.class, new ViewBinder());
     }
 
-    public static class ViewBinder implements ItemViewBinder<ClickablePreference, ViewHolder> {
+    public static class ViewBinder extends ItemViewBinder.Factory<ClickablePreference, ViewHolder> {
+        public ViewBinder() {
+            super(R.layout.preference_listitem_general);
+        }
+
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.preference_listitem_general, parent, false
-            );
+        public ViewHolder createViewHolder(@NonNull View itemView) {
             return new ViewHolder(itemView);
         }
 
@@ -52,9 +51,9 @@ public class ClickablePreference extends Preference2 {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView preferenceTitle;
-        private TextView preferenceSummary;
-        private View preferenceItemLayout;
+        public final TextView preferenceTitle;
+        public final TextView preferenceSummary;
+        public final View preferenceItemLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

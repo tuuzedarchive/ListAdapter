@@ -44,7 +44,17 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
         return (P) this;
     }
 
-    public abstract static class ViewBinder<P extends CompoundButtonPreference<P>> implements ItemViewBinder<P, ViewHolder> {
+    public static class ViewBinder<P extends CompoundButtonPreference<P>> extends ItemViewBinder.Factory<P, ViewHolder> {
+        public ViewBinder(int layoutRes) {
+            super(layoutRes);
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder createViewHolder(@NonNull View itemView) {
+            return new ViewHolder(itemView);
+        }
+
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, P p, int position) {
             //noinspection unchecked
@@ -53,10 +63,10 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
     }
 
     public static class ViewHolder<P extends CompoundButtonPreference> extends RecyclerView.ViewHolder {
-        private TextView preferenceTitle;
-        private TextView preferenceSummary;
-        private CompoundButton preferenceCompoundButton;
-        private View preferenceItemLayout;
+        public final TextView preferenceTitle;
+        public final TextView preferenceSummary;
+        public final CompoundButton preferenceCompoundButton;
+        public final View preferenceItemLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,7 +88,7 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
             });
         }
 
-        private void doCallback(@NonNull P preference, int position) {
+        protected void doCallback(@NonNull P preference, int position) {
             boolean oldChecked = preference.checked;
             preference.setChecked(!preference.checked);
             //noinspection unchecked
@@ -88,7 +98,6 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
                 preference.setChecked(oldChecked);
             }
         }
-
     }
 
 }

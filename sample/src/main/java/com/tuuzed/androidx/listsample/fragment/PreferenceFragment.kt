@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.tuuzed.androidx.list.adapter.ListAdapter
+import com.tuuzed.androidx.list.preference.ItemsLoaderFunction
 import com.tuuzed.androidx.list.preference.PreferenceCallback
 import com.tuuzed.androidx.list.preference.Preferences
 import com.tuuzed.androidx.list.preference.ktx.*
@@ -36,7 +37,7 @@ class PreferenceFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = listAdapter
         recyclerView.addItemDecoration(ListItemDivider(requireContext()))
-        usePreferences(listAdapter) {
+        withPreferences(listAdapter) {
             category { title = "Category" }
             general {
                 title = "General"
@@ -94,7 +95,9 @@ class PreferenceFragment : Fragment() {
             singleChoiceItems<String> {
                 title = "SingleChoiceItems"
                 summary = "Summary"
-                options = (1..100).map { "SingleChoiceItem $it" }
+                itemsLoaderFunction = ItemsLoaderFunction { callback ->
+                    callback((1..100).map { "SingleChoiceItem $it" })
+                }
                 callback = PreferenceCallback { preference, _ ->
                     showTip(preference.summary)
                     true
@@ -104,7 +107,9 @@ class PreferenceFragment : Fragment() {
                 title = "SingleChoiceItems#NeedConfirm"
                 summary = "Summary"
                 isNeedConfirm = true
-                options = (1..100).map { "SingleChoiceItem#NeedConfirm $it" }
+                itemsLoaderFunction = ItemsLoaderFunction { callback ->
+                    callback((1..100).map { "SingleChoiceItem $it" })
+                }
                 callback = PreferenceCallback { preference, _ ->
                     showTip(preference.summary)
                     true
@@ -113,7 +118,9 @@ class PreferenceFragment : Fragment() {
             multiChoiceItems<String> {
                 title = "MultiChoiceItems"
                 summary = "Summary"
-                options = (1..100).map { "MultiChoiceItem $it" }
+                itemsLoaderFunction = ItemsLoaderFunction { callback ->
+                    callback((1..100).map { "SingleChoiceItem $it" })
+                }
                 callback = PreferenceCallback { preference, _ ->
                     showTip(preference.summary)
                     true

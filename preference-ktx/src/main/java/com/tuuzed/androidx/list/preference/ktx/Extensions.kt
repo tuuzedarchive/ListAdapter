@@ -6,9 +6,19 @@ import com.tuuzed.androidx.list.preference.*
 
 class UsePreferencesScope(val adapter: ListAdapter)
 
+
+@Deprecated(
+    message = "Deprecated",
+    replaceWith = ReplaceWith("withPreferences", "")
+)
 inline fun usePreferences(listAdapter: ListAdapter, func: UsePreferencesScope.() -> Unit) {
     func(UsePreferencesScope(listAdapter))
 }
+
+inline fun withPreferences(listAdapter: ListAdapter, func: UsePreferencesScope.() -> Unit) {
+    func(UsePreferencesScope(listAdapter))
+}
+
 
 inline fun UsePreferencesScope.category(func: CategoryPreference.() -> Unit) =
     this.adapter.items.add(CategoryPreference("").apply(func))

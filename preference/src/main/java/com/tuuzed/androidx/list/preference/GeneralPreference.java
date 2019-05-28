@@ -1,8 +1,6 @@
 package com.tuuzed.androidx.list.preference;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +9,7 @@ import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.internal.Preference2;
 
 public class GeneralPreference extends Preference2 {
-    
+
     public GeneralPreference(@NonNull String title, @NonNull String summary) {
         super(title, summary);
     }
@@ -20,13 +18,15 @@ public class GeneralPreference extends Preference2 {
         listAdapter.bind(GeneralPreference.class, new ViewBinder());
     }
 
-    public static class ViewBinder implements ItemViewBinder<GeneralPreference, ViewHolder> {
+    public static class ViewBinder extends ItemViewBinder.Factory<GeneralPreference, ViewHolder> {
+
+        public ViewBinder() {
+            super(R.layout.preference_listitem_general);
+        }
+
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.preference_listitem_general, parent, false
-            );
+        public ViewHolder createViewHolder(@NonNull View itemView) {
             return new ViewHolder(itemView);
         }
 
@@ -38,8 +38,8 @@ public class GeneralPreference extends Preference2 {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView preferenceTitle;
-        private TextView preferenceSummary;
+        public final TextView preferenceTitle;
+        public final TextView preferenceSummary;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -7,7 +7,10 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -115,14 +118,15 @@ public class EditTextPreference extends Preference2 {
         listAdapter.bind(EditTextPreference.class, new ViewBinder());
     }
 
-    public static class ViewBinder implements ItemViewBinder<EditTextPreference, ViewHolder> {
+    public static class ViewBinder extends ItemViewBinder.Factory<EditTextPreference, ViewHolder> {
+
+        public ViewBinder() {
+            super(R.layout.preference_listitem_edittext);
+        }
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.preference_listitem_edittext, parent, false
-            );
+        public ViewHolder createViewHolder(@NonNull View itemView) {
             return new ViewHolder(itemView);
         }
 
@@ -134,9 +138,9 @@ public class EditTextPreference extends Preference2 {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView preferenceTitle;
-        private TextView preferenceSummary;
-        private View preferenceItemLayout;
+        public final TextView preferenceTitle;
+        public final TextView preferenceSummary;
+        public final View preferenceItemLayout;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -159,7 +163,7 @@ public class EditTextPreference extends Preference2 {
         }
 
         @SuppressLint("InflateParams")
-        private void showInnerDialog(
+        protected void showInnerDialog(
                 @NonNull final Context context,
                 @NonNull final EditTextPreference preference,
                 final int position
@@ -231,7 +235,7 @@ public class EditTextPreference extends Preference2 {
             });
         }
 
-        private void onPreferenceChanged(
+        protected void onPreferenceChanged(
                 Button positiveButton,
                 @NonNull EditTextPreference preference,
                 @NonNull MaterialEditText editText
@@ -246,7 +250,7 @@ public class EditTextPreference extends Preference2 {
         }
 
 
-        private void doCallback(@NonNull EditTextPreference preference, MaterialEditText editText, int position) {
+        protected void doCallback(@NonNull EditTextPreference preference, MaterialEditText editText, int position) {
             // old
             String oldSummary = preference.getSummary();
             // new
@@ -262,7 +266,7 @@ public class EditTextPreference extends Preference2 {
             }
         }
 
-        private void toggleSoftInput(@NonNull EditText editText, boolean show) {
+        protected void toggleSoftInput(@NonNull EditText editText, boolean show) {
             final Context context = editText.getContext();
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {

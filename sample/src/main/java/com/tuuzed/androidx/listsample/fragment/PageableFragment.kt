@@ -11,15 +11,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.tuuzed.androidx.list.adapter.ItemViewBinder
 import com.tuuzed.androidx.list.adapter.ListAdapter
+import com.tuuzed.androidx.list.adapter.ktx.bindType
+import com.tuuzed.androidx.list.adapter.ktx.withView
 import com.tuuzed.androidx.list.loadmore.LoadMoreController
 import com.tuuzed.androidx.list.loadmore.ktx.useLoadMore
 import com.tuuzed.androidx.list.pageable.PagedList
 import com.tuuzed.androidx.list.pageable.PagedListDataFetcher
-import com.tuuzed.androidx.list.preference.Preferences
 import com.tuuzed.androidx.listsample.R
 import com.tuuzed.androidx.listsample.common.ListItemDivider
 import com.tuuzed.androidx.listsample.model.NameItem
@@ -89,8 +88,18 @@ class PageableFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listAdapter = ListAdapter(LinkedList<Any>())
-        listAdapter.bind(NameItem::class.java, NameItemViewBinder())
-        Preferences.bindAllTo(listAdapter)
+
+        listAdapter.bindType(
+            NameItem::class.java,
+            R.layout.listitem_name
+        ) { holder, item, _ ->
+            holder.withView<TextView>(R.id.text1) {
+                text = item.name
+            }
+            holder.itemView.setOnClickListener {
+                Snackbar.make(it, item.name, Snackbar.LENGTH_SHORT).show()
+            }
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = listAdapter
@@ -107,30 +116,6 @@ class PageableFragment : Fragment() {
             .setLoadMoreController(loadMoreController)
             .setOnLoadMoreListener(pagedListDataFetcher)
             .into(recyclerView)
-    }
-
-    private class NameItemViewBinder : ItemViewBinder<NameItem, NameItemViewHolder> {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NameItemViewHolder {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.listitem_name, parent, false)
-            return NameItemViewHolder(itemView)
-        }
-
-        override fun onBindViewHolder(holder: NameItemViewHolder, item: NameItem, position: Int) {
-            holder.setNameItem(item)
-        }
-    }
-
-    private class NameItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var item: NameItem? = null
-        private val textView: TextView = itemView.findViewById(R.id.text1)
-
-        fun setNameItem(item: NameItem?) {
-            this.item = item
-            textView.text = item?.name
-            itemView.setOnClickListener {
-                Snackbar.make(it, textView.text.toString(), Snackbar.LENGTH_SHORT).show()
-            }
-        }
     }
 
 

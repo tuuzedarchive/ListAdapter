@@ -3,6 +3,9 @@ package com.tuuzed.androidx.list.preference;
 import androidx.annotation.NonNull;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Preferences {
 
     private static final PreferenceCallback DEFAULT_PREFERENCE_CALLBACK = new PreferenceCallback() {
@@ -11,11 +14,19 @@ public class Preferences {
             return true;
         }
     };
-    private static final OptionToStringFunction DEFAULT_OPTION_TO_STRING_FUNCTION = new OptionToStringFunction() {
+    private static final ItemToStringFunction DEFAULT_ITEM_TO_STRING_FUNCTION = new ItemToStringFunction() {
         @NonNull
         @Override
         public CharSequence invoke(Object option) {
             return option == null ? "" : option.toString();
+        }
+    };
+
+    private static final ItemsLoaderFunction DEFAULT_ITEMS_LOADER_FUNCTION = new ItemsLoaderFunction() {
+        @Override
+        public void invoke(@NonNull Callback callback) {
+            //noinspection unchecked
+            callback.invoke(Collections.emptyList());
         }
     };
 
@@ -26,9 +37,15 @@ public class Preferences {
     }
 
     @NonNull
-    public static <T> OptionToStringFunction<T> defaultOptionToStringFunction() {
+    public static <T> ItemToStringFunction<T> defaultItemToStringFunction() {
         //noinspection unchecked
-        return DEFAULT_OPTION_TO_STRING_FUNCTION;
+        return DEFAULT_ITEM_TO_STRING_FUNCTION;
+    }
+
+    @NonNull
+    public static <T> ItemsLoaderFunction<T> defaultItemsLoaderFunction() {
+        //noinspection unchecked
+        return DEFAULT_ITEMS_LOADER_FUNCTION;
     }
 
     public static void bindAllTo(@NonNull ListAdapter listAdapter) {

@@ -2,7 +2,9 @@ package com.tuuzed.androidx.list.preference;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.*;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -14,16 +16,15 @@ import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.internal.Preference2;
 
-import java.util.Collections;
 import java.util.List;
 
 public class SingleChoiceItemsPreference<T> extends Preference2 {
     @NonNull
-    private List<T> options = Collections.emptyList();
+    private ItemsLoaderFunction<T> itemsLoaderFunction = Preferences.defaultItemsLoaderFunction();
     @Nullable
-    private T checkedOption;
+    private T checkedItem;
     @NonNull
-    private OptionToStringFunction<T> optionToStringFunction = Preferences.defaultOptionToStringFunction();
+    private ItemToStringFunction<T> itemToStringFunction = Preferences.defaultItemToStringFunction();
     @NonNull
     private PreferenceCallback<SingleChoiceItemsPreference<T>> callback = Preferences.defaultPreferenceCallback();
     private boolean allowEmptySelection;
@@ -34,34 +35,35 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
     }
 
     @NonNull
-    public List<T> getOptions() {
-        return options;
+    public ItemsLoaderFunction<T> getItemsLoaderFunction() {
+        return itemsLoaderFunction;
     }
 
-    public SingleChoiceItemsPreference<T> setOptions(@NonNull List<T> options) {
-        this.options = options;
+    @NonNull
+    public SingleChoiceItemsPreference<T> setItemsLoaderFunction(@NonNull ItemsLoaderFunction<T> itemsLoaderFunction) {
+        this.itemsLoaderFunction = itemsLoaderFunction;
         return this;
     }
 
     @Nullable
-    public T getCheckedOption() {
-        return checkedOption;
+    public T getCheckedItem() {
+        return checkedItem;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setCheckedOption(@Nullable T checkedOption) {
-        this.checkedOption = checkedOption;
+    public SingleChoiceItemsPreference<T> setCheckedItem(@Nullable T checkedItem) {
+        this.checkedItem = checkedItem;
         return this;
     }
 
     @NonNull
-    public OptionToStringFunction<T> getOptionToStringFunction() {
-        return optionToStringFunction;
+    public ItemToStringFunction<T> getItemToStringFunction() {
+        return itemToStringFunction;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setOptionToStringFunction(@NonNull OptionToStringFunction<T> optionToStringFunction) {
-        this.optionToStringFunction = optionToStringFunction;
+    public SingleChoiceItemsPreference<T> setItemToStringFunction(@NonNull ItemToStringFunction<T> itemToStringFunction) {
+        this.itemToStringFunction = itemToStringFunction;
         return this;
     }
 
@@ -90,37 +92,39 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
         return needConfirm;
     }
 
+    @NonNull
     public SingleChoiceItemsPreference<T> setNeedConfirm(boolean needConfirm) {
         this.needConfirm = needConfirm;
         return this;
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
+        //noinspection unchecked
         listAdapter.bind(SingleChoiceItemsPreference.class, new ViewBinder());
     }
 
-    public static class ViewBinder implements ItemViewBinder<SingleChoiceItemsPreference, ViewHolder> {
+    public static class ViewBinder<T> extends ItemViewBinder.Factory<SingleChoiceItemsPreference<T>, ViewHolder<T>> {
+        public ViewBinder() {
+            super(R.layout.preference_listitem_singlechoiceitems);
+        }
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.preference_listitem_singlechoiceitems, parent, false
-            );
-            return new ViewHolder(itemView);
+        public ViewHolder<T> createViewHolder(@NonNull View itemView) {
+            return new ViewHolder<>(itemView);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, SingleChoiceItemsPreference preference, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder<T> holder, SingleChoiceItemsPreference<T> preference, int position) {
             holder.setPreference(preference, position);
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder<T> extends RecyclerView.ViewHolder {
 
-        private TextView preferenceTitle;
-        private TextView preferenceSummary;
-        private View preferenceItemLayout;
+        public final TextView preferenceTitle;
+        public final TextView preferenceSummary;
+        public final View preferenceItemLayout;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -130,46 +134,52 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             preferenceItemLayout = itemView.findViewById(R.id.preference_item_layout);
         }
 
-        public void setPreference(@NonNull final SingleChoiceItemsPreference preference, final int position) {
+        public void setPreference(@NonNull final SingleChoiceItemsPreference<T> preference, final int position) {
             preferenceTitle.setText(preference.getTitle());
             preferenceSummary.setText(preference.getSummary());
             preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Context context = v.getContext();
-                    showInnerDialog(context, preference, position);
+                    preference.itemsLoaderFunction.invoke(new ItemsLoaderFunction.Callback<T>() {
+                        @Override
+                        public void invoke(@NonNull List<T> items) {
+                            showInnerDialog(context, preference, items, position);
+                        }
+                    });
                 }
             });
         }
 
-        private <T> void showInnerDialog(
+        private void showInnerDialog(
                 @NonNull final Context context,
                 @NonNull final SingleChoiceItemsPreference<T> preference,
+                @NonNull final List<T> items,
                 final int position
         ) {
-            CharSequence[] items = new CharSequence[preference.options.size()];
-            final int[] checkedItem = new int[]{-1};
-            for (int i = 0; i < items.length; i++) {
-                T option = preference.options.get(i);
-                items[i] = preference.optionToStringFunction.invoke(option);
-                if (preference.checkedOption == option) {
-                    checkedItem[0] = i;
+            CharSequence[] displayItems = new CharSequence[items.size()];
+            final int[] checkedItemIndex = new int[]{-1};
+            for (int i = 0; i < displayItems.length; i++) {
+                T item = items.get(i);
+                displayItems[i] = preference.itemToStringFunction.invoke(item);
+                if (preference.checkedItem == item) {
+                    checkedItemIndex[0] = i;
                 }
             }
             final Button[] positiveButton = new Button[]{null};
             final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                     .setTitle(preference.getTitle())
-                    .setSingleChoiceItems(items, checkedItem[0], new DialogInterface.OnClickListener() {
+                    .setSingleChoiceItems(displayItems, checkedItemIndex[0], new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            checkedItem[0] = which;
+                            checkedItemIndex[0] = which;
                             // 需要再次确认
                             if (preference.needConfirm) {
-                                onPreferenceChanged(positiveButton[0], preference, checkedItem[0]);
+                                onPreferenceChanged(positiveButton[0], preference, items, checkedItemIndex[0]);
                             }
                             // 不需要再次确认
                             else {
-                                doCallback(preference, position, checkedItem);
+                                doCallback(preference, position, items, checkedItemIndex);
                                 dialog.dismiss();
                             }
                         }
@@ -179,7 +189,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                doCallback(preference, position, checkedItem);
+                                doCallback(preference, position, items, checkedItemIndex);
                             }
                         });
             }
@@ -194,46 +204,48 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-            onPreferenceChanged(positiveButton[0], preference, checkedItem[0]);
+            onPreferenceChanged(positiveButton[0], preference, items, checkedItemIndex[0]);
         }
 
-        private <T> void onPreferenceChanged(
+        private void onPreferenceChanged(
                 Button positiveButton,
                 @NonNull final SingleChoiceItemsPreference<T> preference,
-                int checkedItem
+                @NonNull final List<T> items,
+                int checkedItemIndex
         ) {
             if (positiveButton != null) {
                 if (preference.allowEmptySelection) {
                     positiveButton.setEnabled(true);
                 } else {
-                    positiveButton.setEnabled(checkedItem >= 0 && checkedItem < preference.options.size());
+                    positiveButton.setEnabled(checkedItemIndex >= 0 && checkedItemIndex < items.size());
                 }
             }
         }
 
-        private <T> void doCallback(
+        private void doCallback(
                 @NonNull final SingleChoiceItemsPreference<T> preference,
                 final int position,
-                @NonNull @Size(1) final int[] checkedItem
+                @NonNull final List<T> items,
+                @NonNull @Size(1) final int[] checkedItemIndex
         ) {
             // old
             String oldSummary = preference.getSummary();
-            T oldCheckedOption = preference.getCheckedOption();
+            T oldCheckedItem = preference.checkedItem;
             // new
-            T newCheckedOption = null;
-            if (checkedItem[0] > 0 && checkedItem[0] < preference.options.size()) {
-                newCheckedOption = preference.options.get(checkedItem[0]);
+            T newCheckedItem = null;
+            if (checkedItemIndex[0] > 0 && checkedItemIndex[0] < items.size()) {
+                newCheckedItem = items.get(checkedItemIndex[0]);
             }
-            String newSummary = preference.optionToStringFunction.invoke(newCheckedOption).toString();
+            String newSummary = preference.itemToStringFunction.invoke(newCheckedItem).toString();
             // set new
             preference.setSummary(newSummary);
-            preference.setCheckedOption(newCheckedOption);
+            preference.setCheckedItem(newCheckedItem);
             // callback
             if (preference.callback.invoke(preference, position)) {
                 setPreference(preference, position);
             } else {
                 preference.setSummary(oldSummary);
-                preference.setCheckedOption(oldCheckedOption);
+                preference.setCheckedItem(oldCheckedItem);
             }
         }
 
