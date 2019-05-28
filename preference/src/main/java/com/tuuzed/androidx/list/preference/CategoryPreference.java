@@ -1,8 +1,6 @@
 package com.tuuzed.androidx.list.preference;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,13 +18,14 @@ public class CategoryPreference extends Preference {
         listAdapter.bind(CategoryPreference.class, new ViewBinder());
     }
 
-    public static class ViewBinder implements ItemViewBinder<CategoryPreference, ViewHolder> {
+    public static class ViewBinder extends ItemViewBinder.Factory<CategoryPreference, ViewHolder> {
+        public ViewBinder() {
+            super(R.layout.preference_listitem_category);
+        }
+
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.preference_listitem_category, parent, false
-            );
+        public ViewHolder createViewHolder(@NonNull View itemView) {
             return new ViewHolder(itemView);
         }
 
@@ -38,7 +37,7 @@ public class CategoryPreference extends Preference {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView preferenceTitle;
+        public final TextView preferenceTitle;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
