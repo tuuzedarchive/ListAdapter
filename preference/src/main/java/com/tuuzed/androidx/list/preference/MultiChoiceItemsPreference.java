@@ -9,10 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
+import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.internal.Preference2;
+import com.tuuzed.androidx.list.preference.internal.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,47 +120,31 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder<T> holder, MultiChoiceItemsPreference<T> preference, int position) {
-            holder.setPreference(preference, position);
-        }
-    }
-
-    public static class ViewHolder<T> extends RecyclerView.ViewHolder {
-
-        public final TextView preferenceTitle;
-        public final TextView preferenceSummary;
-        public final View preferenceItemLayout;
-
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            preferenceTitle = itemView.findViewById(R.id.preference_title);
-            preferenceSummary = itemView.findViewById(R.id.preference_summary);
-            preferenceItemLayout = itemView.findViewById(R.id.preference_item_layout);
-        }
-
-        public void setPreference(@NonNull final MultiChoiceItemsPreference<T> preference, final int position) {
-            preferenceTitle.setText(preference.getTitle());
-            preferenceSummary.setText(preference.getSummary());
-            preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
+        public void onBindViewHolder(
+                @NonNull final ViewHolder<T> holder,
+                final MultiChoiceItemsPreference<T> preference,
+                final int position
+        ) {
+            holder.setPreference(preference);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Context context = v.getContext();
                     preference.itemsLoaderFunction.invoke(new ItemsLoaderFunction.Callback<T>() {
                         @Override
                         public void invoke(@NonNull List<T> items) {
-                            showInnerDialog(context, preference, items, position);
-
+                            showInnerDialog(context, holder, preference, items, position);
                         }
                     });
+
                 }
             });
-
-
         }
+
 
         protected void showInnerDialog(
                 @NonNull final Context context,
+                @NonNull final ViewHolder<T> holder,
                 @NonNull final MultiChoiceItemsPreference<T> preference,
                 @NonNull final List<T> items,
                 final int position
@@ -185,7 +170,7 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            doCallback(preference, position, items, checkedItemStatusArray);
+                            doCallback(holder, preference, position, items, checkedItemStatusArray);
                         }
                     })
                     .create();
@@ -208,12 +193,13 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
                 if (preference.allowEmptySelection) {
                     positiveButton.setEnabled(true);
                 } else {
-                    positiveButton.setEnabled(hasTrue(checkedItemStatusArray));
+                    positiveButton.setEnabled(Utils.hasTrue(checkedItemStatusArray));
                 }
             }
         }
 
         protected void doCallback(
+                @NonNull final ViewHolder<T> holder,
                 @NonNull final MultiChoiceItemsPreference<T> preference,
                 final int position,
                 @NonNull final List<T> items,
@@ -243,21 +229,25 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
             preference.setCheckedItems(newCheckedItems);
             // callback
             if (preference.callback.invoke(preference, position)) {
-                setPreference(preference, position);
+                holder.setPreference(preference);
             } else {
                 preference.setSummary(oldSummary);
                 preference.setCheckedItems(oldCheckedItems);
             }
         }
 
-        protected boolean hasTrue(boolean[] array) {
-            if (array == null) return false;
-            for (boolean it : array) {
-                if (it) return true;
-            }
-            return false;
+    }
+
+    public static class ViewHolder<T> extends CommonViewHolder {
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
 
+        public void setPreference(@NonNull final MultiChoiceItemsPreference<T> preference) {
+            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
+            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
+        }
 
     }
 

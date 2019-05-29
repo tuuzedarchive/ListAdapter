@@ -11,7 +11,10 @@ public class RadioPreference extends CompoundButtonPreference<RadioPreference> {
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
-        listAdapter.bind(RadioPreference.class, new CompoundButtonPreference.ViewBinder<RadioPreference>(R.layout.preference_listitem_radio));
+        listAdapter.bind(
+                RadioPreference.class,
+                new CompoundButtonPreference.ViewBinder<RadioPreference>(R.layout.preference_listitem_radio)
+        );
     }
 
 }

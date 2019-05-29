@@ -3,7 +3,7 @@ package com.tuuzed.androidx.list.preference;
 import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.internal.Preference2;
@@ -44,28 +44,13 @@ public class ClickablePreference extends Preference2 {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, ClickablePreference preference, int position) {
-            holder.setPreference(preference, position);
-        }
-
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView preferenceTitle;
-        public final TextView preferenceSummary;
-        public final View preferenceItemLayout;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            preferenceTitle = itemView.findViewById(R.id.preference_title);
-            preferenceSummary = itemView.findViewById(R.id.preference_summary);
-            preferenceItemLayout = itemView.findViewById(R.id.preference_item_layout);
-        }
-
-        public void setPreference(@NonNull final ClickablePreference preference, final int position) {
-            preferenceTitle.setText(preference.getTitle());
-            preferenceSummary.setText(preference.getSummary());
-            preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
+        public void onBindViewHolder(
+                @NonNull final ViewHolder holder,
+                final ClickablePreference preference,
+                final int position
+        ) {
+            holder.setPreference(preference);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     preference.click.invoke(preference, position);
@@ -73,6 +58,18 @@ public class ClickablePreference extends Preference2 {
             });
         }
 
+    }
+
+    public static class ViewHolder extends CommonViewHolder {
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public void setPreference(@NonNull final ClickablePreference preference) {
+            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
+            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
+        }
     }
 
 }

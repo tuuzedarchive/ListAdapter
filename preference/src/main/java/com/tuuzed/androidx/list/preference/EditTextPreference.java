@@ -3,6 +3,7 @@ package com.tuuzed.androidx.list.preference;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -11,18 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.internal.Preference2;
+import com.tuuzed.androidx.list.preference.internal.Utils;
 
 public class EditTextPreference extends Preference2 {
     private int inputType = InputType.TYPE_CLASS_TEXT;
@@ -33,9 +34,10 @@ public class EditTextPreference extends Preference2 {
     private boolean allowEmpty = false;
     private int minLength = -1;
     private int maxLength = -1;
+    @Nullable
+    private TextValidator textValidator = null;
     @NonNull
     private PreferenceCallback<EditTextPreference> callback = Preferences.defaultPreferenceCallback();
-
 
     public EditTextPreference(@NonNull String title, @NonNull String summary) {
         super(title, summary);
@@ -103,6 +105,17 @@ public class EditTextPreference extends Preference2 {
         return this;
     }
 
+    @Nullable
+    public TextValidator getTextValidator() {
+        return textValidator;
+    }
+
+    @NonNull
+    public EditTextPreference setTextValidator(@Nullable TextValidator textValidator) {
+        this.textValidator = textValidator;
+        return this;
+    }
+
     @NonNull
     public PreferenceCallback<EditTextPreference> getCallback() {
         return callback;
@@ -131,33 +144,13 @@ public class EditTextPreference extends Preference2 {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, EditTextPreference preference, int position) {
-            holder.setPreference(preference, position);
-        }
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public final TextView preferenceTitle;
-        public final TextView preferenceSummary;
-        public final View preferenceItemLayout;
-
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            preferenceTitle = itemView.findViewById(R.id.preference_title);
-            preferenceSummary = itemView.findViewById(R.id.preference_summary);
-            preferenceItemLayout = itemView.findViewById(R.id.preference_item_layout);
-        }
-
-        public void setPreference(@NonNull final EditTextPreference preference, final int position) {
-            preferenceTitle.setText(preference.getTitle());
-            preferenceSummary.setText(preference.getSummary());
-            preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
+        public void onBindViewHolder(@NonNull final ViewHolder holder, final EditTextPreference preference, final int position) {
+            holder.setPreference(preference);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Context context = v.getContext();
-                    showInnerDialog(context, preference, position);
+                    showInnerDialog(context, holder, preference, position);
                 }
             });
         }
@@ -165,10 +158,13 @@ public class EditTextPreference extends Preference2 {
         @SuppressLint("InflateParams")
         protected void showInnerDialog(
                 @NonNull final Context context,
+                @NonNull final ViewHolder holder,
                 @NonNull final EditTextPreference preference,
                 final int position
         ) {
-            final View contentView = LayoutInflater.from(context).inflate(R.layout.preference_dialog_edittext, null, false);
+            final View contentView = LayoutInflater.from(context).inflate(
+                    R.layout.preference_dialog_edittext, null, false
+            );
             final MaterialEditText editText = contentView.findViewById(R.id.editText);
             final AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle(preference.getTitle())
@@ -177,7 +173,7 @@ public class EditTextPreference extends Preference2 {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            doCallback(preference, editText, position);
+                            doCallback(holder, preference, editText, position);
                         }
                     })
                     .create();
@@ -198,6 +194,7 @@ public class EditTextPreference extends Preference2 {
             }
             editText.setHint(preference.hint);
             editText.setHelperText(preference.helperText);
+            final String[] errorText = new String[1];
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -209,28 +206,28 @@ public class EditTextPreference extends Preference2 {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    onPreferenceChanged(positiveButton, preference, editText);
+                    onPreferenceChanged(positiveButton, preference, editText, errorText);
                 }
             });
-            onPreferenceChanged(positiveButton, preference, editText);
+            onPreferenceChanged(positiveButton, preference, editText, errorText);
             // 强制显示输入法
             editText.requestFocus();
             editText.post(new Runnable() {
                 @Override
                 public void run() {
-                    toggleSoftInput(editText, true);
+                    Utils.toggleSoftInput(editText, true);
                 }
             });
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    toggleSoftInput(editText, false);
+                    Utils.toggleSoftInput(editText, false);
                 }
             });
             dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    toggleSoftInput(editText, false);
+                    Utils.toggleSoftInput(editText, false);
                 }
             });
         }
@@ -238,19 +235,35 @@ public class EditTextPreference extends Preference2 {
         protected void onPreferenceChanged(
                 Button positiveButton,
                 @NonNull EditTextPreference preference,
-                @NonNull MaterialEditText editText
+                @NonNull MaterialEditText editText,
+                @NonNull @Size(1) String[] errorText
         ) {
-            if (positiveButton != null) {
-                if (preference.allowEmpty) {
-                    positiveButton.setEnabled(true);
+            final Editable text = editText.getText();
+            if (preference.allowEmpty) {
+                if (positiveButton != null) positiveButton.setEnabled(true);
+            } else {
+                if (positiveButton != null) positiveButton.setEnabled(!TextUtils.isEmpty(text));
+            }
+            if (preference.textValidator != null) {
+                boolean pass = preference.textValidator.test(text, errorText);
+                if (pass) {
+                    editText.setHelperText(preference.helperText);
+                    editText.setHelperTextColor(Color.GRAY);
+                    if (positiveButton != null) positiveButton.setEnabled(true);
                 } else {
-                    positiveButton.setEnabled(!TextUtils.isEmpty(editText.getText()));
+                    editText.setHelperTextColor(Color.RED);
+                    editText.setHelperText(errorText[0]);
+                    if (positiveButton != null) positiveButton.setEnabled(false);
                 }
             }
         }
 
-
-        protected void doCallback(@NonNull EditTextPreference preference, MaterialEditText editText, int position) {
+        protected void doCallback(
+                @NonNull ViewHolder holder,
+                @NonNull EditTextPreference preference,
+                @NonNull MaterialEditText editText,
+                int position
+        ) {
             // old
             String oldSummary = preference.getSummary();
             // new
@@ -260,22 +273,23 @@ public class EditTextPreference extends Preference2 {
             preference.setSummary(newSummary);
             // callback
             if (preference.callback.invoke(preference, position)) {
-                setPreference(preference, position);
+                holder.setPreference(preference);
             } else {
                 preference.setSummary(oldSummary);
             }
         }
 
-        protected void toggleSoftInput(@NonNull EditText editText, boolean show) {
-            final Context context = editText.getContext();
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                if (show) {
-                    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-                } else {
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-            }
+    }
+
+    public static class ViewHolder extends CommonViewHolder {
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public void setPreference(@NonNull final EditTextPreference preference) {
+            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
+            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
         }
 
     }

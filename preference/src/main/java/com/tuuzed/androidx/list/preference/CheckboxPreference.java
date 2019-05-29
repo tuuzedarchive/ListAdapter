@@ -11,7 +11,10 @@ public class CheckboxPreference extends CompoundButtonPreference<CheckboxPrefere
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
-        listAdapter.bind(CheckboxPreference.class, new CompoundButtonPreference.ViewBinder<CheckboxPreference>(R.layout.preference_listitem_checkbox));
+        listAdapter.bind(
+                CheckboxPreference.class,
+                new CompoundButtonPreference.ViewBinder<CheckboxPreference>(R.layout.preference_listitem_checkbox)
+        );
     }
 
 }

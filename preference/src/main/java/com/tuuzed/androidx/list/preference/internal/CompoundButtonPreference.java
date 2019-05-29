@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.preference.PreferenceCallback;
 import com.tuuzed.androidx.list.preference.Preferences;
@@ -44,60 +44,50 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
         return (P) this;
     }
 
-    public static class ViewBinder<P extends CompoundButtonPreference<P>> extends ItemViewBinder.Factory<P, ViewHolder> {
+    public static class ViewBinder<P extends CompoundButtonPreference<P>> extends ItemViewBinder.Factory<P, ViewHolder<P>> {
         public ViewBinder(int layoutRes) {
             super(layoutRes);
         }
 
         @NonNull
         @Override
-        public ViewHolder createViewHolder(@NonNull View itemView) {
-            return new ViewHolder(itemView);
+        public ViewHolder<P> createViewHolder(@NonNull View itemView) {
+            return new ViewHolder<>(itemView);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, P p, int position) {
-            //noinspection unchecked
-            holder.setPreference(p, position);
-        }
-    }
-
-    public static class ViewHolder<P extends CompoundButtonPreference> extends RecyclerView.ViewHolder {
-        public final TextView preferenceTitle;
-        public final TextView preferenceSummary;
-        public final CompoundButton preferenceCompoundButton;
-        public final View preferenceItemLayout;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            preferenceTitle = itemView.findViewById(R.id.preference_title);
-            preferenceSummary = itemView.findViewById(R.id.preference_summary);
-            preferenceCompoundButton = itemView.findViewById(R.id.preference_compound_button);
-            preferenceItemLayout = itemView.findViewById(R.id.preference_item_layout);
-        }
-
-        public void setPreference(@NonNull final P preference, final int position) {
-            preferenceTitle.setText(preference.getTitle());
-            preferenceSummary.setText(preference.getSummary());
-            preferenceCompoundButton.setChecked(preference.checked);
-            preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
+        public void onBindViewHolder(@NonNull final ViewHolder<P> holder, final P preference, final int position) {
+            holder.setPreference(preference);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    doCallback(preference, position);
+                    doCallback(holder, preference, position);
                 }
             });
         }
 
-        protected void doCallback(@NonNull P preference, int position) {
+        protected void doCallback(@NonNull final ViewHolder<P> holder, final P preference, final int position) {
             boolean oldChecked = preference.checked;
             preference.setChecked(!preference.checked);
-            //noinspection unchecked
             if (preference.callback.invoke(preference, position)) {
-                setPreference(preference, position);
+                holder.setPreference(preference);
             } else {
                 preference.setChecked(oldChecked);
             }
         }
+    }
+
+    public static class ViewHolder<P extends CompoundButtonPreference> extends CommonViewHolder {
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public void setPreference(@NonNull final P preference) {
+            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
+            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
+            find(R.id.preference_compound_button, CompoundButton.class).setChecked(preference.checked);
+        }
+
     }
 
 }
