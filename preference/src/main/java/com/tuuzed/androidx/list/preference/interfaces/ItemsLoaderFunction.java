@@ -1,4 +1,4 @@
-package com.tuuzed.androidx.list.preference;
+package com.tuuzed.androidx.list.preference.interfaces;
 
 import androidx.annotation.NonNull;
 

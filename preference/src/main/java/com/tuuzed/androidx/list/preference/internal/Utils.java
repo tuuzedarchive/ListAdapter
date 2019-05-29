@@ -5,7 +5,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 
-public class Utils {
+public final class Utils {
 
     @SuppressWarnings("EqualsReplaceableByObjectsCall")
     public static boolean equals(Object a, Object b) {

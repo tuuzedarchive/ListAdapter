@@ -6,76 +6,79 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import androidx.recyclerview.widget.RecyclerView;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
-import com.tuuzed.androidx.list.preference.internal.Preference2;
+import com.tuuzed.androidx.list.preference.base.Preference2;
+import com.tuuzed.androidx.list.preference.interfaces.ItemToStringFunction;
+import com.tuuzed.androidx.list.preference.interfaces.ItemsLoaderFunction;
+import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
+import com.tuuzed.androidx.list.preference.internal.Preference2Helper;
 import com.tuuzed.androidx.list.preference.internal.Utils;
 
 import java.util.List;
 
-public class SingleChoiceItemsPreference<T> extends Preference2 {
+public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPreference> {
     @NonNull
-    private ItemsLoaderFunction<T> itemsLoaderFunction = Preferences.defaultItemsLoaderFunction();
+    private ItemsLoaderFunction<Object> itemsLoaderFunction = Preferences.defaultItemsLoaderFunction();
     @Nullable
-    private T checkedItem;
+    private Object checkedItem;
     @NonNull
-    private ItemToStringFunction<T> itemToStringFunction = Preferences.defaultItemToStringFunction();
+    private ItemToStringFunction<Object> itemToStringFunction = Preferences.defaultItemToStringFunction();
     @NonNull
-    private PreferenceCallback<SingleChoiceItemsPreference<T>> callback = Preferences.defaultPreferenceCallback();
+    private PreferenceCallback<SingleChoiceItemsPreference> callback = Preferences.defaultPreferenceCallback();
     private boolean allowEmptySelection;
     private boolean needConfirm;
 
-    public SingleChoiceItemsPreference(String title, String summary) {
+    public SingleChoiceItemsPreference(@NonNull String title, @NonNull String summary) {
         super(title, summary);
     }
 
     @NonNull
-    public ItemsLoaderFunction<T> getItemsLoaderFunction() {
+    public ItemsLoaderFunction<Object> getItemsLoaderFunction() {
         return itemsLoaderFunction;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setItemsLoaderFunction(@NonNull ItemsLoaderFunction<T> itemsLoaderFunction) {
+    public SingleChoiceItemsPreference setItemsLoaderFunction(@NonNull ItemsLoaderFunction<Object> itemsLoaderFunction) {
         this.itemsLoaderFunction = itemsLoaderFunction;
         return this;
     }
 
     @Nullable
-    public T getCheckedItem() {
+    public Object getCheckedItem() {
         return checkedItem;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setCheckedItem(@Nullable T checkedItem) {
+    public SingleChoiceItemsPreference setCheckedItem(@Nullable Object checkedItem) {
         this.checkedItem = checkedItem;
         return this;
     }
 
     @NonNull
-    public ItemToStringFunction<T> getItemToStringFunction() {
+    public ItemToStringFunction<Object> getItemToStringFunction() {
         return itemToStringFunction;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setItemToStringFunction(@NonNull ItemToStringFunction<T> itemToStringFunction) {
+    public SingleChoiceItemsPreference setItemToStringFunction(@NonNull ItemToStringFunction<Object> itemToStringFunction) {
         this.itemToStringFunction = itemToStringFunction;
         return this;
     }
 
     @NonNull
-    public PreferenceCallback<SingleChoiceItemsPreference<T>> getCallback() {
+    public PreferenceCallback<SingleChoiceItemsPreference> getCallback() {
         return callback;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setCallback(@NonNull PreferenceCallback<SingleChoiceItemsPreference<T>> callback) {
+    public SingleChoiceItemsPreference setCallback(@NonNull PreferenceCallback<SingleChoiceItemsPreference> callback) {
         this.callback = callback;
         return this;
     }
@@ -85,7 +88,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setAllowEmptySelection(boolean allowEmptySelection) {
+    public SingleChoiceItemsPreference setAllowEmptySelection(boolean allowEmptySelection) {
         this.allowEmptySelection = allowEmptySelection;
         return this;
     }
@@ -95,41 +98,42 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
     }
 
     @NonNull
-    public SingleChoiceItemsPreference<T> setNeedConfirm(boolean needConfirm) {
+    public SingleChoiceItemsPreference setNeedConfirm(boolean needConfirm) {
         this.needConfirm = needConfirm;
         return this;
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
-        //noinspection unchecked
-        listAdapter.bind(SingleChoiceItemsPreference.class, new ViewBinder());
+        listAdapter.bind(SingleChoiceItemsPreference.class, new DefaultItemViewBinder());
     }
 
-    public static class ViewBinder<T> extends ItemViewBinder.Factory<SingleChoiceItemsPreference<T>, ViewHolder<T>> {
-        public ViewBinder() {
-            super(R.layout.preference_listitem_singlechoiceitems);
-        }
-
+    public static final class DefaultItemViewBinder extends ItemViewBinderFactory<SingleChoiceItemsPreference, CommonViewHolder> {
         @NonNull
         @Override
-        public ViewHolder<T> createViewHolder(@NonNull View itemView) {
-            return new ViewHolder<>(itemView);
+        public CommonViewHolder createViewHolder(@NonNull View itemView) {
+            return new CommonViewHolder(itemView);
+        }
+    }
+
+
+    public abstract static class ItemViewBinderFactory<P extends SingleChoiceItemsPreference, VH extends RecyclerView.ViewHolder>
+            extends ItemViewBinder.Factory<P, VH> {
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_singlechoiceitems;
         }
 
         @Override
-        public void onBindViewHolder(
-                @NonNull final ViewHolder<T> holder,
-                final SingleChoiceItemsPreference<T> preference,
-                final int position
-        ) {
-            holder.setPreference(preference);
+        public void onBindViewHolder(@NonNull final VH holder, final P preference, final int position) {
+            super.onBindViewHolder(holder, preference, position);
+            setPreference(holder, preference);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Context context = v.getContext();
-                    preference.itemsLoaderFunction.invoke(new ItemsLoaderFunction.Callback<T>() {
+                    preference.getItemsLoaderFunction().invoke(new ItemsLoaderFunction.Callback<Object>() {
                         @Override
-                        public void invoke(@NonNull List<T> items) {
+                        public void invoke(@NonNull List<Object> items) {
                             showInnerDialog(context, holder, preference, items, position);
                         }
                     });
@@ -137,19 +141,24 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             });
         }
 
-        protected void showInnerDialog(
+        public void setPreference(@NonNull VH holder, @NonNull P preference) {
+            Preference2Helper.setPreference(holder, preference);
+        }
+
+
+        public void showInnerDialog(
                 @NonNull final Context context,
-                @NonNull final ViewHolder<T> holder,
-                @NonNull final SingleChoiceItemsPreference<T> preference,
-                @NonNull final List<T> items,
+                @NonNull final VH holder,
+                @NonNull final P preference,
+                @NonNull final List<Object> items,
                 final int position
         ) {
             CharSequence[] displayItems = new CharSequence[items.size()];
             final int[] checkedItemIndex = new int[]{-1};
             for (int i = 0; i < displayItems.length; i++) {
-                T item = items.get(i);
-                displayItems[i] = preference.itemToStringFunction.invoke(item);
-                if (Utils.equals(preference.checkedItem, item)) {
+                Object item = items.get(i);
+                displayItems[i] = preference.getItemToStringFunction().invoke(item);
+                if (Utils.equals(preference.getCheckedItem(), item)) {
                     checkedItemIndex[0] = i;
                 }
             }
@@ -162,7 +171,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                         public void onClick(DialogInterface dialog, int which) {
                             checkedItemIndex[0] = which;
                             // 需要再次确认
-                            if (preference.needConfirm) {
+                            if (preference.isNeedConfirm()) {
                                 onPreferenceChanged(positiveButton[0], preference, items, checkedItemIndex[0]);
                             }
                             // 不需要再次确认
@@ -172,7 +181,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                             }
                         }
                     });
-            if (preference.needConfirm) {
+            if (preference.isNeedConfirm()) {
                 builder.setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -182,12 +191,11 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                         });
             }
             final AlertDialog dialog = builder.create();
-            if (preference.needConfirm) {
+            if (preference.isNeedConfirm()) {
                 dialog.setCanceledOnTouchOutside(true);
             }
             dialog.show();
             positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -195,14 +203,14 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             onPreferenceChanged(positiveButton[0], preference, items, checkedItemIndex[0]);
         }
 
-        protected void onPreferenceChanged(
+        public void onPreferenceChanged(
                 Button positiveButton,
-                @NonNull final SingleChoiceItemsPreference<T> preference,
-                @NonNull final List<T> items,
+                @NonNull final P preference,
+                @NonNull final List<Object> items,
                 int checkedItemIndex
         ) {
             if (positiveButton != null) {
-                if (preference.allowEmptySelection) {
+                if (preference.isAllowEmptySelection()) {
                     positiveButton.setEnabled(true);
                 } else {
                     positiveButton.setEnabled(checkedItemIndex >= 0 && checkedItemIndex < items.size());
@@ -210,46 +218,33 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             }
         }
 
-        protected void doCallback(
-                @NonNull final ViewHolder<T> holder,
-                @NonNull final SingleChoiceItemsPreference<T> preference,
+        public void doCallback(
+                @NonNull final VH holder,
+                @NonNull final P preference,
                 final int position,
-                @NonNull final List<T> items,
+                @NonNull final List<Object> items,
                 @NonNull @Size(1) final int[] checkedItemIndex
         ) {
             // old
             String oldSummary = preference.getSummary();
-            T oldCheckedItem = preference.checkedItem;
+            Object oldCheckedItem = preference.getCheckedItem();
             // new
-            T newCheckedItem = null;
+            Object newCheckedItem = null;
             if (checkedItemIndex[0] > 0 && checkedItemIndex[0] < items.size()) {
                 newCheckedItem = items.get(checkedItemIndex[0]);
             }
-            String newSummary = preference.itemToStringFunction.invoke(newCheckedItem).toString();
+            String newSummary = preference.getItemToStringFunction().invoke(newCheckedItem).toString();
             // set new
             preference.setSummary(newSummary);
             preference.setCheckedItem(newCheckedItem);
             // callback
-            if (preference.callback.invoke(preference, position)) {
-                holder.setPreference(preference);
+            if (preference.getCallback().invoke(preference, position)) {
+                setPreference(holder, preference);
             } else {
                 preference.setSummary(oldSummary);
                 preference.setCheckedItem(oldCheckedItem);
             }
         }
     }
-
-    public static class ViewHolder<T> extends CommonViewHolder {
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-
-        public void setPreference(@NonNull final SingleChoiceItemsPreference<T> preference) {
-            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
-            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
-        }
-    }
-
 
 }

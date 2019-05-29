@@ -1,11 +1,11 @@
-package com.tuuzed.androidx.list.preference.internal;
+package com.tuuzed.androidx.list.preference.base;
 
 import androidx.annotation.NonNull;
 
 public abstract class Preference<P extends Preference<P>> {
 
     @NonNull
-    protected String title;
+    private String title;
 
     public Preference(@NonNull String title) {
         this.title = title;

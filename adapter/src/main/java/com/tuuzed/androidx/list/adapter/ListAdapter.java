@@ -53,7 +53,7 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             itemViewTypeList.add(clazz);
             itemViewBinderList.add(binder);
         } else {
-            itemViewBinderList.add(index, binder);
+            itemViewBinderList.set(index, binder);
         }
         return this;
     }
@@ -61,7 +61,11 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemViewType(int position) {
         Class<?> clazz = items.get(position).getClass();
-        return itemViewTypeList.indexOf(clazz);
+        int viewType = itemViewTypeList.indexOf(clazz);
+        if (viewType == -1) {
+            throw new RuntimeException("### Unbound Type: " + clazz.getName() + " ###");
+        }
+        return viewType;
     }
 
     @NonNull
@@ -75,6 +79,7 @@ public final class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final int viewType = getItemViewType(position);
+
         final ItemViewBinder binder = getItemViewBinder(viewType);
         assert binder != null;
         final Object item = items.get(position);

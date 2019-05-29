@@ -12,21 +12,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
-import com.tuuzed.androidx.list.preference.internal.Preference2;
+import com.tuuzed.androidx.list.preference.base.Preference2;
+import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
+import com.tuuzed.androidx.list.preference.interfaces.TextValidator;
+import com.tuuzed.androidx.list.preference.internal.Preference2Helper;
 import com.tuuzed.androidx.list.preference.internal.Utils;
 
-public class EditTextPreference extends Preference2 {
+public class EditTextPreference extends Preference2<EditTextPreference> {
     private int inputType = InputType.TYPE_CLASS_TEXT;
     @Nullable
     private CharSequence hint = null;
@@ -118,24 +120,30 @@ public class EditTextPreference extends Preference2 {
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
-        listAdapter.bind(EditTextPreference.class, new ViewBinder());
+        listAdapter.bind(EditTextPreference.class, new DefaultItemViewBinder());
     }
 
-    public static class ViewBinder extends ItemViewBinder.Factory<EditTextPreference, ViewHolder> {
-
-        public ViewBinder() {
-            super(R.layout.preference_listitem_edittext);
-        }
-
+    public static final class DefaultItemViewBinder extends ItemViewBinderFactory<EditTextPreference, CommonViewHolder> {
         @NonNull
         @Override
-        public ViewHolder createViewHolder(@NonNull View itemView) {
-            return new ViewHolder(itemView);
+        public CommonViewHolder createViewHolder(@NonNull View itemView) {
+            return new CommonViewHolder(itemView);
+        }
+    }
+
+
+    public abstract static class ItemViewBinderFactory<P extends EditTextPreference, VH extends RecyclerView.ViewHolder>
+            extends ItemViewBinder.Factory<P, VH> {
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_edittext;
         }
 
+
         @Override
-        public void onBindViewHolder(@NonNull final ViewHolder holder, final EditTextPreference preference, final int position) {
-            holder.setPreference(preference);
+        public void onBindViewHolder(@NonNull final VH holder, final P preference, final int position) {
+            super.onBindViewHolder(holder, preference, position);
+            setPreference(holder, preference);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,11 +153,16 @@ public class EditTextPreference extends Preference2 {
             });
         }
 
+
+        public void setPreference(@NonNull VH holder, @NonNull P preference) {
+            Preference2Helper.setPreference(holder, preference);
+        }
+
         @SuppressLint("InflateParams")
-        protected void showInnerDialog(
+        public void showInnerDialog(
                 @NonNull final Context context,
-                @NonNull final ViewHolder holder,
-                @NonNull final EditTextPreference preference,
+                @NonNull final VH holder,
+                @NonNull final P preference,
                 final int position
         ) {
             final View contentView = LayoutInflater.from(context).inflate(
@@ -170,21 +183,20 @@ public class EditTextPreference extends Preference2 {
             final AlertDialog dialog = builder.create();
             dialog.show();
             @Nullable final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-            textInputEditText.setText(preference.summary);
-            textInputEditText.setInputType(preference.inputType);
-            if (preference.maxLength != -1) {
+            textInputEditText.setText(preference.getSummary());
+            textInputEditText.setInputType(preference.getInputType());
+            if (preference.getMaxLength() != -1) {
                 textInputLayout.setCounterEnabled(true);
-                textInputLayout.setCounterMaxLength(preference.maxLength);
+                textInputLayout.setCounterMaxLength(preference.getMaxLength());
             }
-            textInputEditText.setHint(preference.hint);
-            if (preference.helperText != null) {
+            textInputEditText.setHint(preference.getHint());
+            if (preference.getHelperText() != null) {
                 textInputLayout.setHelperTextEnabled(true);
-                textInputLayout.setHelperText(preference.helperText);
+                textInputLayout.setHelperText(preference.getHelperText());
             }
             final String[] errorText = new String[1];
             textInputEditText.addTextChangedListener(new TextWatcher() {
@@ -224,32 +236,32 @@ public class EditTextPreference extends Preference2 {
             });
         }
 
-        protected void onPreferenceChanged(
+        public void onPreferenceChanged(
                 Button positiveButton,
-                @NonNull EditTextPreference preference,
+                @NonNull P preference,
                 @NonNull TextInputLayout textInputLayout,
                 @NonNull TextInputEditText textInputEditText,
                 @NonNull @Size(1) String[] errorText
         ) {
             final Editable text = textInputEditText.getText();
             // 空验证
-            if (preference.allowEmpty) {
+            if (preference.isAllowEmpty()) {
                 if (positiveButton != null) positiveButton.setEnabled(true);
             } else {
                 if (positiveButton != null) positiveButton.setEnabled(!TextUtils.isEmpty(text));
             }
             // 长度验证
-            if (preference.maxLength != -1) {
+            if (preference.getMaxLength() != -1) {
                 int length = TextUtils.isEmpty(text) ? 0 : text.length();
-                if (positiveButton != null) positiveButton.setEnabled(length <= preference.maxLength);
+                if (positiveButton != null) positiveButton.setEnabled(length <= preference.getMaxLength());
             }
             // 自定义验证
-            if (preference.textValidator != null) {
-                boolean pass = preference.textValidator.test(text, errorText);
+            if (preference.getTextValidator() != null) {
+                boolean pass = preference.getTextValidator().test(text, errorText);
                 if (pass) {
-                    if (preference.helperText != null) {
+                    if (preference.getHelperText() != null) {
                         textInputLayout.setHelperTextEnabled(true);
-                        textInputLayout.setHelperText(preference.helperText);
+                        textInputLayout.setHelperText(preference.getHelperText());
                     }
                     if (positiveButton != null) positiveButton.setEnabled(true);
                 } else {
@@ -260,9 +272,9 @@ public class EditTextPreference extends Preference2 {
             }
         }
 
-        protected void doCallback(
-                @NonNull ViewHolder holder,
-                @NonNull EditTextPreference preference,
+        public void doCallback(
+                @NonNull VH holder,
+                @NonNull P preference,
                 @NonNull TextInputEditText textInputEditText,
                 int position
         ) {
@@ -274,24 +286,11 @@ public class EditTextPreference extends Preference2 {
             // set new
             preference.setSummary(newSummary);
             // callback
-            if (preference.callback.invoke(preference, position)) {
-                holder.setPreference(preference);
+            if (preference.getCallback().invoke(preference, position)) {
+                setPreference(holder, preference);
             } else {
                 preference.setSummary(oldSummary);
             }
-        }
-
-    }
-
-    public static class ViewHolder extends CommonViewHolder {
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-
-        public void setPreference(@NonNull final EditTextPreference preference) {
-            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
-            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
         }
 
     }

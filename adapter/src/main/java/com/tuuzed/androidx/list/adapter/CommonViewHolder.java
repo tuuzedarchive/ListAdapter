@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.annotation.IdRes;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CommonViewHolder extends RecyclerView.ViewHolder {
@@ -21,21 +22,20 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
         views = new SparseArray<>(initialCapacity);
     }
 
+    @Nullable
     public <T extends View> T find(@IdRes int id) {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);
-            assert view != null;
-            views.put(id, view);
+            if (view != null) {
+                views.put(id, view);
+            }
         }
-        //noinspection unchecked
-        return (T) view;
+        if (view != null) {
+            //noinspection unchecked
+            return (T) view;
+        }
+        return null;
     }
-
-    public <T extends View> T find(@IdRes int id, @NonNull Class<T> clazz) {
-        //noinspection unchecked
-        return (T) find(id);
-    }
-
 
 }

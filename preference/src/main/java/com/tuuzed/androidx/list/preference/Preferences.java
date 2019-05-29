@@ -2,11 +2,13 @@ package com.tuuzed.androidx.list.preference;
 
 import androidx.annotation.NonNull;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
+import com.tuuzed.androidx.list.preference.interfaces.ItemToStringFunction;
+import com.tuuzed.androidx.list.preference.interfaces.ItemsLoaderFunction;
+import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
 
 import java.util.Collections;
-import java.util.List;
 
-public class Preferences {
+public final class Preferences {
 
     private static final PreferenceCallback DEFAULT_PREFERENCE_CALLBACK = new PreferenceCallback() {
         @Override

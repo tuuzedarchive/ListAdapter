@@ -9,7 +9,7 @@ import com.tuuzed.androidx.list.adapter.ItemViewBinder
 import com.tuuzed.androidx.list.adapter.ListAdapter
 
 inline fun <T : View> CommonViewHolder.withView(@IdRes id: Int, block: T.() -> Unit) {
-    block(this.find(id))
+    find<T>(id)?.also { block(it) }
 }
 
 fun <T> ListAdapter.bindType(
@@ -17,7 +17,8 @@ fun <T> ListAdapter.bindType(
     @LayoutRes layoutRes: Int,
     onBindViewHolder: (holder: CommonViewHolder, item: T, position: Int) -> Unit
 ) {
-    this.bind(type, object : ItemViewBinder.Factory<T, CommonViewHolder>(layoutRes) {
+    this.bind(type, object : ItemViewBinder.Factory<T, CommonViewHolder>() {
+        override fun getLayoutRes(): Int = layoutRes
         override fun createViewHolder(itemView: View): CommonViewHolder = CommonViewHolder(itemView)
         override fun onBindViewHolder(holder: CommonViewHolder, t: T, position: Int) =
             onBindViewHolder(holder, t, position)
@@ -30,7 +31,8 @@ fun <T, VH : RecyclerView.ViewHolder> ListAdapter.bindType(
     createViewHolder: (itemView: View) -> VH,
     onBindViewHolder: (holder: VH, item: T, position: Int) -> Unit
 ) {
-    this.bind(type, object : ItemViewBinder.Factory<T, VH>(layoutRes) {
+    this.bind(type, object : ItemViewBinder.Factory<T, VH>() {
+        override fun getLayoutRes(): Int = layoutRes
         override fun createViewHolder(itemView: View): VH = createViewHolder(itemView)
         override fun onBindViewHolder(holder: VH, t: T, position: Int) = onBindViewHolder(holder, t, position)
     })

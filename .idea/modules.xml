@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ListAdapter.iml" filepath="$PROJECT_DIR$/.idea/ListAdapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/ListAdapter.iml" filepath="$PROJECT_DIR$/ListAdapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ListAdapter.iml" filepath="$PROJECT_DIR$/.idea/ListAdapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/adapter/adapter.iml" filepath="$PROJECT_DIR$/adapter/adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" filepath="$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" />
       <module fileurl="file://$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" filepath="$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" />
       <module fileurl="file://$PROJECT_DIR$/loadmore/loadmore.iml" filepath="$PROJECT_DIR$/loadmore/loadmore.iml" />
       <module fileurl="file://$PROJECT_DIR$/loadmore-ktx/loadmore-ktx.iml" filepath="$PROJECT_DIR$/loadmore-ktx/loadmore-ktx.iml" />
