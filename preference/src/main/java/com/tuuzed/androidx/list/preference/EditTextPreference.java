@@ -12,21 +12,20 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
-import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
-import com.tuuzed.androidx.list.preference.internal.Preference2;
+import com.tuuzed.androidx.list.preference.base.Preference2;
+import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
+import com.tuuzed.androidx.list.preference.interfaces.TextValidator;
 import com.tuuzed.androidx.list.preference.internal.Utils;
 
-public class EditTextPreference extends Preference2 {
+public class EditTextPreference extends Preference2<EditTextPreference> {
     private int inputType = InputType.TYPE_CLASS_TEXT;
     @Nullable
     private CharSequence hint = null;
@@ -118,25 +117,19 @@ public class EditTextPreference extends Preference2 {
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
-        listAdapter.bind(EditTextPreference.class, new ViewBinder());
+        listAdapter.bind(EditTextPreference.class, new ItemViewBinderFactory() {
+        });
     }
 
-    public static class ViewBinder extends ItemViewBinder.Factory<EditTextPreference, ViewHolder> {
-
+    public abstract static class ItemViewBinderFactory extends Preference2.ItemViewBinderFactory<EditTextPreference> {
         @Override
         public int getLayoutRes() {
             return R.layout.preference_listitem_edittext;
         }
 
-        @NonNull
         @Override
-        public ViewHolder createViewHolder(@NonNull View itemView) {
-            return new ViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final ViewHolder holder, final EditTextPreference preference, final int position) {
-            holder.setPreference(preference);
+        public void onBindViewHolder(@NonNull final CommonViewHolder holder, final EditTextPreference preference, final int position) {
+            super.onBindViewHolder(holder, preference, position);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -146,10 +139,11 @@ public class EditTextPreference extends Preference2 {
             });
         }
 
+
         @SuppressLint("InflateParams")
         protected void showInnerDialog(
                 @NonNull final Context context,
-                @NonNull final ViewHolder holder,
+                @NonNull final CommonViewHolder holder,
                 @NonNull final EditTextPreference preference,
                 final int position
         ) {
@@ -261,7 +255,7 @@ public class EditTextPreference extends Preference2 {
         }
 
         protected void doCallback(
-                @NonNull ViewHolder holder,
+                @NonNull CommonViewHolder holder,
                 @NonNull EditTextPreference preference,
                 @NonNull TextInputEditText textInputEditText,
                 int position
@@ -275,26 +269,11 @@ public class EditTextPreference extends Preference2 {
             preference.setSummary(newSummary);
             // callback
             if (preference.callback.invoke(preference, position)) {
-                holder.setPreference(preference);
+                setPreference(holder, preference);
             } else {
                 preference.setSummary(oldSummary);
             }
         }
-
     }
-
-    public static class ViewHolder extends CommonViewHolder {
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-
-        public void setPreference(@NonNull final EditTextPreference preference) {
-            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
-            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
-        }
-
-    }
-
 
 }

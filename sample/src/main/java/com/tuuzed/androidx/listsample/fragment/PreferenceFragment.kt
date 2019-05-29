@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.tuuzed.androidx.list.adapter.ListAdapter
-import com.tuuzed.androidx.list.preference.ItemsLoaderFunction
-import com.tuuzed.androidx.list.preference.PreferenceCallback
+import com.tuuzed.androidx.list.preference.interfaces.ItemsLoaderFunction
+import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback
 import com.tuuzed.androidx.list.preference.Preferences
-import com.tuuzed.androidx.list.preference.TextValidator
+import com.tuuzed.androidx.list.preference.interfaces.TextValidator
 import com.tuuzed.androidx.list.preference.ktx.*
 import com.tuuzed.androidx.listsample.R
 import com.tuuzed.androidx.listsample.common.ListItemDivider
