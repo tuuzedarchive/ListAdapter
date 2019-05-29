@@ -11,10 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.internal.Preference2;
+import com.tuuzed.androidx.list.preference.internal.Utils;
 
 import java.util.List;
 
@@ -115,44 +117,29 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder<T> holder, SingleChoiceItemsPreference<T> preference, int position) {
-            holder.setPreference(preference, position);
-        }
-    }
-
-    public static class ViewHolder<T> extends RecyclerView.ViewHolder {
-
-        public final TextView preferenceTitle;
-        public final TextView preferenceSummary;
-        public final View preferenceItemLayout;
-
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            preferenceTitle = itemView.findViewById(R.id.preference_title);
-            preferenceSummary = itemView.findViewById(R.id.preference_summary);
-            preferenceItemLayout = itemView.findViewById(R.id.preference_item_layout);
-        }
-
-        public void setPreference(@NonNull final SingleChoiceItemsPreference<T> preference, final int position) {
-            preferenceTitle.setText(preference.getTitle());
-            preferenceSummary.setText(preference.getSummary());
-            preferenceItemLayout.setOnClickListener(new View.OnClickListener() {
+        public void onBindViewHolder(
+                @NonNull final ViewHolder<T> holder,
+                final SingleChoiceItemsPreference<T> preference,
+                final int position
+        ) {
+            holder.setPreference(preference);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Context context = v.getContext();
                     preference.itemsLoaderFunction.invoke(new ItemsLoaderFunction.Callback<T>() {
                         @Override
                         public void invoke(@NonNull List<T> items) {
-                            showInnerDialog(context, preference, items, position);
+                            showInnerDialog(context, holder, preference, items, position);
                         }
                     });
                 }
             });
         }
 
-        private void showInnerDialog(
+        protected void showInnerDialog(
                 @NonNull final Context context,
+                @NonNull final ViewHolder<T> holder,
                 @NonNull final SingleChoiceItemsPreference<T> preference,
                 @NonNull final List<T> items,
                 final int position
@@ -162,11 +149,12 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             for (int i = 0; i < displayItems.length; i++) {
                 T item = items.get(i);
                 displayItems[i] = preference.itemToStringFunction.invoke(item);
-                if (preference.checkedItem == item) {
+                if (Utils.equals(preference.checkedItem, item)) {
                     checkedItemIndex[0] = i;
                 }
             }
             final Button[] positiveButton = new Button[]{null};
+
             final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                     .setTitle(preference.getTitle())
                     .setSingleChoiceItems(displayItems, checkedItemIndex[0], new DialogInterface.OnClickListener() {
@@ -179,7 +167,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                             }
                             // 不需要再次确认
                             else {
-                                doCallback(preference, position, items, checkedItemIndex);
+                                doCallback(holder, preference, position, items, checkedItemIndex);
                                 dialog.dismiss();
                             }
                         }
@@ -189,7 +177,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                doCallback(preference, position, items, checkedItemIndex);
+                                doCallback(holder, preference, position, items, checkedItemIndex);
                             }
                         });
             }
@@ -207,7 +195,7 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             onPreferenceChanged(positiveButton[0], preference, items, checkedItemIndex[0]);
         }
 
-        private void onPreferenceChanged(
+        protected void onPreferenceChanged(
                 Button positiveButton,
                 @NonNull final SingleChoiceItemsPreference<T> preference,
                 @NonNull final List<T> items,
@@ -222,7 +210,8 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             }
         }
 
-        private void doCallback(
+        protected void doCallback(
+                @NonNull final ViewHolder<T> holder,
                 @NonNull final SingleChoiceItemsPreference<T> preference,
                 final int position,
                 @NonNull final List<T> items,
@@ -242,14 +231,24 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             preference.setCheckedItem(newCheckedItem);
             // callback
             if (preference.callback.invoke(preference, position)) {
-                setPreference(preference, position);
+                holder.setPreference(preference);
             } else {
                 preference.setSummary(oldSummary);
                 preference.setCheckedItem(oldCheckedItem);
             }
         }
+    }
 
+    public static class ViewHolder<T> extends CommonViewHolder {
 
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public void setPreference(@NonNull final SingleChoiceItemsPreference<T> preference) {
+            find(R.id.preference_title, TextView.class).setText(preference.getTitle());
+            find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
+        }
     }
 
 

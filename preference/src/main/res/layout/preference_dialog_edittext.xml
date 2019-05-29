@@ -7,22 +7,24 @@
         android:layout_height="match_parent"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:paddingTop="32dp"
 >
 
-
-    <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/editText"
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:scrollbars="vertical"
-            android:focusable="true"
-            app:met_underlineColor="?attr/colorAccent"
-            app:met_primaryColor="?attr/colorAccent"
-            app:met_textColor="?android:attr/textColorPrimary"
-            app:met_helperTextColor="?android:attr/textColorSecondary"
-    />
+            app:boxBackgroundColor="@null"
+    >
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="32dp"
+                android:minHeight="60dp"
+        />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 
 </LinearLayout>

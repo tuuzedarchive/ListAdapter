@@ -25,10 +25,16 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);
+            assert view != null;
             views.put(id, view);
         }
         //noinspection unchecked
         return (T) view;
+    }
+
+    public <T extends View> T find(@IdRes int id, @NonNull Class<T> clazz) {
+        //noinspection unchecked
+        return (T) find(id);
     }
 
 

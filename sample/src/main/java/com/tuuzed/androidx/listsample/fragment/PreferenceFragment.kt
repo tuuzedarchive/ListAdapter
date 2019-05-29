@@ -1,6 +1,7 @@
 package com.tuuzed.androidx.listsample.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.tuuzed.androidx.list.adapter.ListAdapter
 import com.tuuzed.androidx.list.preference.ItemsLoaderFunction
 import com.tuuzed.androidx.list.preference.PreferenceCallback
 import com.tuuzed.androidx.list.preference.Preferences
+import com.tuuzed.androidx.list.preference.TextValidator
 import com.tuuzed.androidx.list.preference.ktx.*
 import com.tuuzed.androidx.listsample.R
 import com.tuuzed.androidx.listsample.common.ListItemDivider
@@ -20,6 +22,7 @@ import java.util.*
 class PreferenceFragment : Fragment() {
 
     companion object {
+        private const val TAG = "PreferenceFragment"
         fun newInstance() = PreferenceFragment()
     }
 
@@ -86,6 +89,36 @@ class PreferenceFragment : Fragment() {
             editText {
                 title = "EditView"
                 summary = "Summary"
+                callback = PreferenceCallback { preference, _ ->
+                    showTip(preference.summary)
+                    true
+                }
+            }
+            editText {
+                title = "EditView#Range"
+                summary = "Summary"
+                maxLength = 10
+                helperText = "helperText"
+                callback = PreferenceCallback { preference, _ ->
+                    showTip(preference.summary)
+                    true
+                }
+            }
+            editText {
+                title = "EditView#Validator"
+                summary = "123456"
+                helperText = "输入数字"
+                textValidator = TextValidator { text, errorText ->
+                    Log.d(TAG, "textValidator: $text")
+                    try {
+                        text.toString().toInt()
+                        true
+                    } catch (e: Exception) {
+                        Log.d(TAG, "textValidator: ${e.message}", e)
+                        errorText[0] = "错误"
+                        false
+                    }
+                }
                 callback = PreferenceCallback { preference, _ ->
                     showTip(preference.summary)
                     true
