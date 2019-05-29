@@ -13,7 +13,6 @@ buildscript {
             'core_ktx'        : 'androidx.core:core-ktx:1.2.0-alpha01',
             'material'        : 'com.google.android.material:material:1.1.0-alpha06',
             'kotlin'          : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-            'materialedittext': 'com.rengwuxian.materialedittext:library:2.1.4',
             // test
             'junit'           : 'junit:junit:4.12',
             'runner'          : 'androidx.test:runner:1.1.1',
@@ -62,5 +61,5 @@ allprojects {
 
 
 group = 'com.tuuzed.androidx.list'
-version = '3.0.0-alpha06'
+version = '3.0.0-alpha07'
 

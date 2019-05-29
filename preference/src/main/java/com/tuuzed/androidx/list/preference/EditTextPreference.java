@@ -3,7 +3,6 @@ package com.tuuzed.androidx.list.preference;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -18,7 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
-import com.rengwuxian.materialedittext.MaterialEditText;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
@@ -32,7 +33,6 @@ public class EditTextPreference extends Preference2 {
     @Nullable
     private CharSequence helperText = null;
     private boolean allowEmpty = false;
-    private int minLength = -1;
     private int maxLength = -1;
     @Nullable
     private TextValidator textValidator = null;
@@ -82,16 +82,6 @@ public class EditTextPreference extends Preference2 {
     @NonNull
     public EditTextPreference setAllowEmpty(boolean allowEmpty) {
         this.allowEmpty = allowEmpty;
-        return this;
-    }
-
-    public int getMinLength() {
-        return minLength;
-    }
-
-    @NonNull
-    public EditTextPreference setMinLength(int minLength) {
-        this.minLength = minLength;
         return this;
     }
 
@@ -165,18 +155,19 @@ public class EditTextPreference extends Preference2 {
             final View contentView = LayoutInflater.from(context).inflate(
                     R.layout.preference_dialog_edittext, null, false
             );
-            final MaterialEditText editText = contentView.findViewById(R.id.editText);
-            final AlertDialog dialog = new AlertDialog.Builder(context)
+            final TextInputLayout textInputLayout = contentView.findViewById(R.id.textInputLayout);
+            final TextInputEditText textInputEditText = contentView.findViewById(R.id.textInputEditText);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                     .setTitle(preference.getTitle())
                     .setView(contentView)
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            doCallback(holder, preference, editText, position);
+                            doCallback(holder, preference, textInputEditText, position);
                         }
-                    })
-                    .create();
+                    });
+            final AlertDialog dialog = builder.create();
             dialog.show();
             @Nullable final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
@@ -184,18 +175,19 @@ public class EditTextPreference extends Preference2 {
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-            editText.setText(preference.summary);
-            editText.setInputType(preference.inputType);
+            textInputEditText.setText(preference.summary);
+            textInputEditText.setInputType(preference.inputType);
             if (preference.maxLength != -1) {
-                editText.setMaxCharacters(preference.maxLength);
+                textInputLayout.setCounterEnabled(true);
+                textInputLayout.setCounterMaxLength(preference.maxLength);
             }
-            if (preference.minLength != -1) {
-                editText.setMinCharacters(preference.minLength);
+            textInputEditText.setHint(preference.hint);
+            if (preference.helperText != null) {
+                textInputLayout.setHelperTextEnabled(true);
+                textInputLayout.setHelperText(preference.helperText);
             }
-            editText.setHint(preference.hint);
-            editText.setHelperText(preference.helperText);
             final String[] errorText = new String[1];
-            editText.addTextChangedListener(new TextWatcher() {
+            textInputEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
@@ -206,28 +198,28 @@ public class EditTextPreference extends Preference2 {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    onPreferenceChanged(positiveButton, preference, editText, errorText);
+                    onPreferenceChanged(positiveButton, preference, textInputLayout, textInputEditText, errorText);
                 }
             });
-            onPreferenceChanged(positiveButton, preference, editText, errorText);
+            onPreferenceChanged(positiveButton, preference, textInputLayout, textInputEditText, errorText);
             // 强制显示输入法
-            editText.requestFocus();
-            editText.post(new Runnable() {
+            textInputEditText.requestFocus();
+            textInputEditText.post(new Runnable() {
                 @Override
                 public void run() {
-                    Utils.toggleSoftInput(editText, true);
+                    Utils.toggleSoftInput(textInputEditText, true);
                 }
             });
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Utils.toggleSoftInput(editText, false);
+                    Utils.toggleSoftInput(textInputEditText, false);
                 }
             });
             dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    Utils.toggleSoftInput(editText, false);
+                    Utils.toggleSoftInput(textInputEditText, false);
                 }
             });
         }
@@ -235,24 +227,34 @@ public class EditTextPreference extends Preference2 {
         protected void onPreferenceChanged(
                 Button positiveButton,
                 @NonNull EditTextPreference preference,
-                @NonNull MaterialEditText editText,
+                @NonNull TextInputLayout textInputLayout,
+                @NonNull TextInputEditText textInputEditText,
                 @NonNull @Size(1) String[] errorText
         ) {
-            final Editable text = editText.getText();
+            final Editable text = textInputEditText.getText();
+            // 空验证
             if (preference.allowEmpty) {
                 if (positiveButton != null) positiveButton.setEnabled(true);
             } else {
                 if (positiveButton != null) positiveButton.setEnabled(!TextUtils.isEmpty(text));
             }
+            // 长度验证
+            if (preference.maxLength != -1) {
+                int length = TextUtils.isEmpty(text) ? 0 : text.length();
+                if (positiveButton != null) positiveButton.setEnabled(length <= preference.maxLength);
+            }
+            // 自定义验证
             if (preference.textValidator != null) {
                 boolean pass = preference.textValidator.test(text, errorText);
                 if (pass) {
-                    editText.setHelperText(preference.helperText);
-                    editText.setHelperTextColor(Color.GRAY);
+                    if (preference.helperText != null) {
+                        textInputLayout.setHelperTextEnabled(true);
+                        textInputLayout.setHelperText(preference.helperText);
+                    }
                     if (positiveButton != null) positiveButton.setEnabled(true);
                 } else {
-                    editText.setHelperTextColor(Color.RED);
-                    editText.setHelperText(errorText[0]);
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError(errorText[0]);
                     if (positiveButton != null) positiveButton.setEnabled(false);
                 }
             }
@@ -261,13 +263,13 @@ public class EditTextPreference extends Preference2 {
         protected void doCallback(
                 @NonNull ViewHolder holder,
                 @NonNull EditTextPreference preference,
-                @NonNull MaterialEditText editText,
+                @NonNull TextInputEditText textInputEditText,
                 int position
         ) {
             // old
             String oldSummary = preference.getSummary();
             // new
-            Editable editable = editText.getText();
+            Editable editable = textInputEditText.getText();
             String newSummary = editable == null ? "" : editable.toString();
             // set new
             preference.setSummary(newSummary);

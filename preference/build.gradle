@@ -28,11 +28,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(":adapter")
-    api deps.materialedittext
 
     implementation deps.appcompat
     implementation deps.annotation
     implementation deps.recyclerview
+    implementation deps.material
 
     testImplementation deps.junit
     androidTestImplementation deps.runner

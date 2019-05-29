@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
@@ -157,7 +158,7 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
                 checkedItemStatusArray[i] = preference.checkedItems.contains(item);
             }
             final Button[] positiveButton = new Button[]{null};
-            final AlertDialog dialog = new AlertDialog.Builder(context)
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                     .setTitle(preference.getTitle())
                     .setMultiChoiceItems(displayItems, checkedItemStatusArray, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
@@ -172,8 +173,8 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
                         public void onClick(DialogInterface dialog, int which) {
                             doCallback(holder, preference, position, items, checkedItemStatusArray);
                         }
-                    })
-                    .create();
+                    });
+            final AlertDialog dialog = builder.create();
             dialog.show();
             positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);

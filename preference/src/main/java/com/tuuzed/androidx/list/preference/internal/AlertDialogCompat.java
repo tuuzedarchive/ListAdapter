@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Window;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import com.tuuzed.androidx.list.preference.R;
@@ -40,8 +41,8 @@ public final class AlertDialogCompat {
             int color = getWindowBackgroundColor(context, defColor);
             drawable = DrawableCompat.wrap(drawable);
             DrawableCompat.setTintList(drawable, new ColorStateList(
-                new int[][]{new int[]{}},
-                new int[]{color})
+                    new int[][]{new int[]{}},
+                    new int[]{color})
             );
             window.setBackgroundDrawable(drawable);
         }

@@ -98,7 +98,6 @@ class PreferenceFragment : Fragment() {
                 title = "EditView#Range"
                 summary = "Summary"
                 maxLength = 10
-                minLength = 5
                 helperText = "helperText"
                 callback = PreferenceCallback { preference, _ ->
                     showTip(preference.summary)
