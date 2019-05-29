@@ -230,7 +230,7 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
             Object oldCheckedItem = preference.getCheckedItem();
             // new
             Object newCheckedItem = null;
-            if (checkedItemIndex[0] > 0 && checkedItemIndex[0] < items.size()) {
+            if (checkedItemIndex[0] >= 0 && checkedItemIndex[0] < items.size()) {
                 newCheckedItem = items.get(checkedItemIndex[0]);
             }
             String newSummary = preference.getItemToStringFunction().invoke(newCheckedItem).toString();
