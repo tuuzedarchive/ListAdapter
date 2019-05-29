@@ -13,7 +13,12 @@ public class CheckboxPreference extends CompoundButtonPreference<CheckboxPrefere
     public static void bindTo(@NonNull ListAdapter listAdapter) {
         listAdapter.bind(
                 CheckboxPreference.class,
-                new CompoundButtonPreference.ViewBinder<CheckboxPreference>(R.layout.preference_listitem_checkbox)
+                new ViewBinder<CheckboxPreference>() {
+                    @Override
+                    public int getLayoutRes() {
+                        return R.layout.preference_listitem_checkbox;
+                    }
+                }
         );
     }
 

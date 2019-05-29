@@ -33,8 +33,10 @@ public class ClickablePreference extends Preference2 {
     }
 
     public static class ViewBinder extends ItemViewBinder.Factory<ClickablePreference, ViewHolder> {
-        public ViewBinder() {
-            super(R.layout.preference_listitem_general);
+
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_general;
         }
 
         @NonNull

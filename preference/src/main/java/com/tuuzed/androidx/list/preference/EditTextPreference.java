@@ -123,8 +123,9 @@ public class EditTextPreference extends Preference2 {
 
     public static class ViewBinder extends ItemViewBinder.Factory<EditTextPreference, ViewHolder> {
 
-        public ViewBinder() {
-            super(R.layout.preference_listitem_edittext);
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_edittext;
         }
 
         @NonNull
@@ -170,7 +171,6 @@ public class EditTextPreference extends Preference2 {
             final AlertDialog dialog = builder.create();
             dialog.show();
             @Nullable final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);

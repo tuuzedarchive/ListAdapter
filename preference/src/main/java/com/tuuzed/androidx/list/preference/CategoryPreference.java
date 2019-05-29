@@ -20,8 +20,9 @@ public class CategoryPreference extends Preference {
 
     public static class ViewBinder extends ItemViewBinder.Factory<CategoryPreference, ViewHolder> {
 
-        public ViewBinder() {
-            super(R.layout.preference_listitem_category);
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_category;
         }
 
         @NonNull

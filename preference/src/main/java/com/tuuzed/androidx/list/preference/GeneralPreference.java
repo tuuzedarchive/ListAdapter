@@ -20,8 +20,9 @@ public class GeneralPreference extends Preference2 {
 
     public static class ViewBinder extends ItemViewBinder.Factory<GeneralPreference, ViewHolder> {
 
-        public ViewBinder() {
-            super(R.layout.preference_listitem_general);
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_general;
         }
 
         @NonNull

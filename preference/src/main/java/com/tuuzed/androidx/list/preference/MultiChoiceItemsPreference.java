@@ -110,8 +110,9 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
 
     public static class ViewBinder<T> extends ItemViewBinder.Factory<MultiChoiceItemsPreference<T>, ViewHolder<T>> {
 
-        public ViewBinder() {
-            super(R.layout.preference_listitem_multichoiceitems);
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_multichoiceitems;
         }
 
         @NonNull
@@ -177,7 +178,6 @@ public class MultiChoiceItemsPreference<T> extends Preference2 {
             final AlertDialog dialog = builder.create();
             dialog.show();
             positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);

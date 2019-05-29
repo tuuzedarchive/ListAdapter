@@ -17,11 +17,7 @@ public interface ItemViewBinder<T, VH extends RecyclerView.ViewHolder> {
     abstract class Factory<T, VH extends RecyclerView.ViewHolder> implements ItemViewBinder<T, VH> {
 
         @LayoutRes
-        private final int layoutRes;
-
-        public Factory(int layoutRes) {
-            this.layoutRes = layoutRes;
-        }
+        public abstract int getLayoutRes();
 
         @NonNull
         public abstract VH createViewHolder(@NonNull View itemView);
@@ -29,7 +25,7 @@ public interface ItemViewBinder<T, VH extends RecyclerView.ViewHolder> {
         @NonNull
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutRes, parent, false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false);
             return createViewHolder(itemView);
         }
 

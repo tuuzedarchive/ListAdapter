@@ -13,7 +13,12 @@ public class RadioPreference extends CompoundButtonPreference<RadioPreference> {
     public static void bindTo(@NonNull ListAdapter listAdapter) {
         listAdapter.bind(
                 RadioPreference.class,
-                new CompoundButtonPreference.ViewBinder<RadioPreference>(R.layout.preference_listitem_radio)
+                new ViewBinder<RadioPreference>() {
+                    @Override
+                    public int getLayoutRes() {
+                        return R.layout.preference_listitem_radio;
+                    }
+                }
         );
     }
 

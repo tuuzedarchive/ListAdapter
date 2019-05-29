@@ -106,8 +106,9 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
     }
 
     public static class ViewBinder<T> extends ItemViewBinder.Factory<SingleChoiceItemsPreference<T>, ViewHolder<T>> {
-        public ViewBinder() {
-            super(R.layout.preference_listitem_singlechoiceitems);
+        @Override
+        public int getLayoutRes() {
+            return R.layout.preference_listitem_singlechoiceitems;
         }
 
         @NonNull
@@ -187,7 +188,6 @@ public class SingleChoiceItemsPreference<T> extends Preference2 {
             }
             dialog.show();
             positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            // AlertDialogCompat.setDialogWindowBackground(context, dialog, Color.WHITE);
             final Window window = dialog.getWindow();
             if (window != null) {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);

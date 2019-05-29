@@ -44,11 +44,7 @@ public abstract class CompoundButtonPreference<P extends CompoundButtonPreferenc
         return (P) this;
     }
 
-    public static class ViewBinder<P extends CompoundButtonPreference<P>> extends ItemViewBinder.Factory<P, ViewHolder<P>> {
-        public ViewBinder(int layoutRes) {
-            super(layoutRes);
-        }
-
+    public abstract static class ViewBinder<P extends CompoundButtonPreference<P>> extends ItemViewBinder.Factory<P, ViewHolder<P>> {
         @NonNull
         @Override
         public ViewHolder<P> createViewHolder(@NonNull View itemView) {

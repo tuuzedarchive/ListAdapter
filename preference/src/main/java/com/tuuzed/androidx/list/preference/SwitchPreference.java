@@ -14,7 +14,12 @@ public class SwitchPreference extends CompoundButtonPreference<SwitchPreference>
     public static void bindTo(@NonNull ListAdapter listAdapter) {
         listAdapter.bind(
                 SwitchPreference.class,
-                new CompoundButtonPreference.ViewBinder<SwitchPreference>(R.layout.preference_listitem_switch)
+                new ViewBinder<SwitchPreference>() {
+                    @Override
+                    public int getLayoutRes() {
+                        return R.layout.preference_listitem_switch;
+                    }
+                }
         );
     }
 
