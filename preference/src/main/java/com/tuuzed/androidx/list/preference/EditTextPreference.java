@@ -24,7 +24,7 @@ import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
 import com.tuuzed.androidx.list.preference.base.Preference2;
 import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
-import com.tuuzed.androidx.list.preference.interfaces.TextValidator;
+import com.tuuzed.androidx.list.preference.interfaces.Validator;
 import com.tuuzed.androidx.list.preference.internal.Preference2Helper;
 import com.tuuzed.androidx.list.preference.internal.Utils;
 
@@ -37,7 +37,7 @@ public class EditTextPreference extends Preference2<EditTextPreference> {
     private boolean allowEmpty = false;
     private int maxLength = -1;
     @Nullable
-    private TextValidator textValidator = null;
+    private Validator<CharSequence> textValidator = null;
     @NonNull
     private PreferenceCallback<EditTextPreference> callback = Preferences.defaultPreferenceCallback();
 
@@ -98,12 +98,12 @@ public class EditTextPreference extends Preference2<EditTextPreference> {
     }
 
     @Nullable
-    public TextValidator getTextValidator() {
+    public Validator<CharSequence> getTextValidator() {
         return textValidator;
     }
 
     @NonNull
-    public EditTextPreference setTextValidator(@Nullable TextValidator textValidator) {
+    public EditTextPreference setTextValidator(@Nullable Validator<CharSequence> textValidator) {
         this.textValidator = textValidator;
         return this;
     }
