@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
@@ -15,70 +16,70 @@ import com.tuuzed.androidx.list.preference.base.Preference2;
 import com.tuuzed.androidx.list.preference.interfaces.ItemToStringFunction;
 import com.tuuzed.androidx.list.preference.interfaces.ItemsLoaderFunction;
 import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
+import com.tuuzed.androidx.list.preference.internal.Preference2Helper;
 import com.tuuzed.androidx.list.preference.internal.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsPreference<T>> {
+public class MultiChoiceItemsPreference extends Preference2<MultiChoiceItemsPreference> {
     @NonNull
-    private ItemsLoaderFunction<T> itemsLoaderFunction = Preferences.defaultItemsLoaderFunction();
+    private ItemsLoaderFunction<Object> itemsLoaderFunction = Preferences.defaultItemsLoaderFunction();
     @NonNull
-    private List<T> checkedItems = Collections.emptyList();
+    private List<Object> checkedItems = Collections.emptyList();
     @NonNull
-    private ItemToStringFunction<T> itemToStringFunction = Preferences.defaultItemToStringFunction();
+    private ItemToStringFunction<Object> itemToStringFunction = Preferences.defaultItemToStringFunction();
     @NonNull
-    private PreferenceCallback<MultiChoiceItemsPreference<T>> callback = Preferences.defaultPreferenceCallback();
+    private PreferenceCallback<MultiChoiceItemsPreference> callback = Preferences.defaultPreferenceCallback();
     @NonNull
     private String itemSeparator = ", ";
     private boolean allowEmptySelection;
 
-
-    public MultiChoiceItemsPreference(String title, String summary) {
+    public MultiChoiceItemsPreference(@NonNull String title, @NonNull String summary) {
         super(title, summary);
     }
 
     @NonNull
-    public ItemsLoaderFunction<T> getItemsLoaderFunction() {
+    public ItemsLoaderFunction<Object> getItemsLoaderFunction() {
         return itemsLoaderFunction;
     }
 
     @NonNull
-    public MultiChoiceItemsPreference<T> setItemsLoaderFunction(@NonNull ItemsLoaderFunction<T> itemsLoaderFunction) {
+    public MultiChoiceItemsPreference setItemsLoaderFunction(@NonNull ItemsLoaderFunction<Object> itemsLoaderFunction) {
         this.itemsLoaderFunction = itemsLoaderFunction;
         return this;
     }
 
     @NonNull
-    public List<T> getCheckedItems() {
+    public List<Object> getCheckedItems() {
         return checkedItems;
     }
 
     @NonNull
-    public MultiChoiceItemsPreference<T> setCheckedItems(@NonNull List<T> checkedItems) {
+    public MultiChoiceItemsPreference setCheckedItems(@NonNull List<Object> checkedItems) {
         this.checkedItems = checkedItems;
         return this;
     }
 
     @NonNull
-    public ItemToStringFunction<T> getItemToStringFunction() {
+    public ItemToStringFunction<Object> getItemToStringFunction() {
         return itemToStringFunction;
     }
 
     @NonNull
-    public MultiChoiceItemsPreference<T> setItemToStringFunction(@NonNull ItemToStringFunction<T> itemToStringFunction) {
+    public MultiChoiceItemsPreference setItemToStringFunction(@NonNull ItemToStringFunction<Object> itemToStringFunction) {
         this.itemToStringFunction = itemToStringFunction;
         return this;
     }
 
     @NonNull
-    public PreferenceCallback<MultiChoiceItemsPreference<T>> getCallback() {
+    public PreferenceCallback<MultiChoiceItemsPreference> getCallback() {
         return callback;
     }
 
     @NonNull
-    public MultiChoiceItemsPreference<T> setCallback(@NonNull PreferenceCallback<MultiChoiceItemsPreference<T>> callback) {
+    public MultiChoiceItemsPreference setCallback(@NonNull PreferenceCallback<MultiChoiceItemsPreference> callback) {
         this.callback = callback;
         return this;
     }
@@ -89,7 +90,7 @@ public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsP
     }
 
     @NonNull
-    public MultiChoiceItemsPreference<T> setItemSeparator(@NonNull String itemSeparator) {
+    public MultiChoiceItemsPreference setItemSeparator(@NonNull String itemSeparator) {
         this.itemSeparator = itemSeparator;
         return this;
     }
@@ -99,34 +100,41 @@ public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsP
     }
 
     @NonNull
-    public MultiChoiceItemsPreference<T> setAllowEmptySelection(boolean allowEmptySelection) {
+    public MultiChoiceItemsPreference setAllowEmptySelection(boolean allowEmptySelection) {
         this.allowEmptySelection = allowEmptySelection;
         return this;
     }
 
     public static void bindTo(@NonNull ListAdapter listAdapter) {
-        //noinspection unchecked
-        listAdapter.bind(MultiChoiceItemsPreference.class, new ItemViewBinderFactory() {
-        });
+        listAdapter.bind(MultiChoiceItemsPreference.class, new DefaultItemViewBinder());
     }
 
-    public abstract static class ItemViewBinderFactory<T>
-            extends Preference2.ItemViewBinderFactory<MultiChoiceItemsPreference<T>> {
+    public static final class DefaultItemViewBinder extends ItemViewBinderFactory<MultiChoiceItemsPreference, CommonViewHolder> {
+        @NonNull
+        @Override
+        public CommonViewHolder createViewHolder(@NonNull View itemView) {
+            return new CommonViewHolder(itemView);
+        }
+    }
+
+    public abstract static class ItemViewBinderFactory<P extends MultiChoiceItemsPreference, VH extends RecyclerView.ViewHolder>
+            extends ItemViewBinder.Factory<P, VH> {
         @Override
         public int getLayoutRes() {
             return R.layout.preference_listitem_multichoiceitems;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final CommonViewHolder holder, final MultiChoiceItemsPreference<T> preference, final int position) {
+        public void onBindViewHolder(@NonNull final VH holder, final P preference, final int position) {
             super.onBindViewHolder(holder, preference, position);
+            setPreference(holder, preference);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Context context = v.getContext();
-                    preference.itemsLoaderFunction.invoke(new ItemsLoaderFunction.Callback<T>() {
+                    preference.getItemsLoaderFunction().invoke(new ItemsLoaderFunction.Callback<Object>() {
                         @Override
-                        public void invoke(@NonNull List<T> items) {
+                        public void invoke(@NonNull List<Object> items) {
                             showInnerDialog(context, holder, preference, items, position);
                         }
                     });
@@ -136,19 +144,23 @@ public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsP
         }
 
 
+        public void setPreference(@NonNull VH holder, @NonNull P preference) {
+            Preference2Helper.setPreference(holder, preference);
+        }
+
         protected void showInnerDialog(
                 @NonNull final Context context,
-                @NonNull final CommonViewHolder holder,
-                @NonNull final MultiChoiceItemsPreference<T> preference,
-                @NonNull final List<T> items,
+                @NonNull final VH holder,
+                @NonNull final P preference,
+                @NonNull final List<Object> items,
                 final int position
         ) {
             final CharSequence[] displayItems = new CharSequence[items.size()];
             final boolean[] checkedItemStatusArray = new boolean[items.size()];
             for (int i = 0; i < displayItems.length; i++) {
-                T item = items.get(i);
-                displayItems[i] = preference.itemToStringFunction.invoke(item);
-                checkedItemStatusArray[i] = preference.checkedItems.contains(item);
+                Object item = items.get(i);
+                displayItems[i] = preference.getItemToStringFunction().invoke(item);
+                checkedItemStatusArray[i] = preference.getCheckedItems().contains(item);
             }
             final Button[] positiveButton = new Button[]{null};
             final AlertDialog.Builder builder = new AlertDialog.Builder(context)
@@ -179,11 +191,11 @@ public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsP
 
         protected void onPreferenceChanged(
                 Button positiveButton,
-                @NonNull final MultiChoiceItemsPreference<T> preference,
+                @NonNull final P preference,
                 @NonNull boolean[] checkedItemStatusArray
         ) {
             if (positiveButton != null) {
-                if (preference.allowEmptySelection) {
+                if (preference.isAllowEmptySelection()) {
                     positiveButton.setEnabled(true);
                 } else {
                     positiveButton.setEnabled(Utils.hasTrue(checkedItemStatusArray));
@@ -192,27 +204,27 @@ public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsP
         }
 
         protected void doCallback(
-                @NonNull final CommonViewHolder holder,
-                @NonNull final MultiChoiceItemsPreference<T> preference,
+                @NonNull final VH holder,
+                @NonNull final P preference,
                 final int position,
-                @NonNull final List<T> items,
+                @NonNull final List<Object> items,
                 @NonNull final boolean[] checkedItemStatusArray
         ) {
             // old
             String oldSummary = preference.getSummary();
-            List<T> oldCheckedItems = preference.checkedItems;
+            List<Object> oldCheckedItems = preference.getCheckedItems();
             // new
-            final List<T> newCheckedItems = new ArrayList<>();
+            final List<Object> newCheckedItems = new ArrayList<>();
             final StringBuilder sb = new StringBuilder();
             boolean first = true;
             for (int i = 0; i < checkedItemStatusArray.length; i++) {
                 if (checkedItemStatusArray[i]) {
-                    T item = items.get(i);
+                    Object item = items.get(i);
                     newCheckedItems.add(item);
                     if (!first) {
-                        sb.append(preference.itemSeparator);
+                        sb.append(preference.getItemSeparator());
                     }
-                    sb.append(preference.itemToStringFunction.invoke(item));
+                    sb.append(preference.getItemToStringFunction().invoke(item));
                     first = false;
                 }
             }
@@ -221,7 +233,7 @@ public class MultiChoiceItemsPreference<T> extends Preference2<MultiChoiceItemsP
             preference.setSummary(newSummary);
             preference.setCheckedItems(newCheckedItems);
             // callback
-            if (preference.callback.invoke(preference, position)) {
+            if (preference.getCallback().invoke(preference, position)) {
                 setPreference(holder, preference);
             } else {
                 preference.setSummary(oldSummary);

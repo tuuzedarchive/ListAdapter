@@ -125,7 +125,7 @@ class PreferenceFragment : Fragment() {
                 }
             }
             category { title = "Items" }
-            singleChoiceItems<String> {
+            singleChoiceItems {
                 title = "SingleChoiceItems"
                 summary = "Summary"
                 itemsLoaderFunction = ItemsLoaderFunction { callback ->
@@ -136,7 +136,7 @@ class PreferenceFragment : Fragment() {
                     true
                 }
             }
-            singleChoiceItems<String> {
+            singleChoiceItems {
                 title = "SingleChoiceItems#NeedConfirm"
                 summary = "Summary"
                 isNeedConfirm = true
@@ -148,7 +148,7 @@ class PreferenceFragment : Fragment() {
                     true
                 }
             }
-            multiChoiceItems<String> {
+            multiChoiceItems {
                 title = "MultiChoiceItems"
                 summary = "Summary"
                 itemsLoaderFunction = ItemsLoaderFunction { callback ->

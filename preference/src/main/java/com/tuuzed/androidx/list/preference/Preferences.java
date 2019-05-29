@@ -8,7 +8,7 @@ import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
 
 import java.util.Collections;
 
-public class Preferences {
+public final class Preferences {
 
     private static final PreferenceCallback DEFAULT_PREFERENCE_CALLBACK = new PreferenceCallback() {
         @Override

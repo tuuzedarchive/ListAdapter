@@ -41,9 +41,9 @@ inline fun UsePreferencesScope.switch(func: SwitchPreference.() -> Unit) =
 inline fun UsePreferencesScope.radio(func: RadioPreference.() -> Unit) =
     this.adapter.items.add(RadioPreference("", "").apply(func))
 
-inline fun <T> UsePreferencesScope.singleChoiceItems(func: SingleChoiceItemsPreference<T>.() -> Unit) =
-    this.adapter.items.add(SingleChoiceItemsPreference<T>("", "").apply(func))
+inline fun UsePreferencesScope.singleChoiceItems(func: SingleChoiceItemsPreference.() -> Unit) =
+    this.adapter.items.add(SingleChoiceItemsPreference("", "").apply(func))
 
-inline fun <T> UsePreferencesScope.multiChoiceItems(func: MultiChoiceItemsPreference<T>.() -> Unit) =
-    this.adapter.items.add(MultiChoiceItemsPreference<T>("", "").apply(func))
+inline fun UsePreferencesScope.multiChoiceItems(func: MultiChoiceItemsPreference.() -> Unit) =
+    this.adapter.items.add(MultiChoiceItemsPreference("", "").apply(func))
 

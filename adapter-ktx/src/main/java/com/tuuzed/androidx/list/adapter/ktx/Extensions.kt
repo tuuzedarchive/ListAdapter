@@ -9,7 +9,7 @@ import com.tuuzed.androidx.list.adapter.ItemViewBinder
 import com.tuuzed.androidx.list.adapter.ListAdapter
 
 inline fun <T : View> CommonViewHolder.withView(@IdRes id: Int, block: T.() -> Unit) {
-    block(this.find(id))
+    find<T>(id)?.also { block(it) }
 }
 
 fun <T> ListAdapter.bindType(

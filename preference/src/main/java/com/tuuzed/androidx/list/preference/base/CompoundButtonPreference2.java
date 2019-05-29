@@ -2,51 +2,23 @@ package com.tuuzed.androidx.list.preference.base;
 
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.preference.Preferences;
 import com.tuuzed.androidx.list.preference.R;
 import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback;
+import com.tuuzed.androidx.list.preference.internal.Preference2Helper;
 
-public abstract class CompoundButtonPreference2<P extends CompoundButtonPreference2<P>> {
-    @NonNull
-    protected String title;
-    @NonNull
-    protected String summary;
+public abstract class CompoundButtonPreference2<P extends CompoundButtonPreference2<P>> extends Preference2<P> {
 
-    protected boolean checked;
+    private boolean checked;
     @NonNull
-    protected PreferenceCallback<P> callback = Preferences.defaultPreferenceCallback();
+    private PreferenceCallback<P> callback = Preferences.defaultPreferenceCallback();
 
     public CompoundButtonPreference2(@NonNull String title, @NonNull String summary) {
-        this.title = title;
-        this.summary = summary;
-    }
-
-    @NonNull
-    public String getTitle() {
-        return title;
-    }
-
-    @NonNull
-    public P setTitle(@NonNull String title) {
-        this.title = title;
-        //noinspection unchecked
-        return (P) this;
-    }
-
-    @NonNull
-    public String getSummary() {
-        return summary;
-    }
-
-    @NonNull
-    public P setSummary(@NonNull String summary) {
-        this.summary = summary;
-        //noinspection unchecked
-        return (P) this;
+        super(title, summary);
     }
 
     public boolean isChecked() {
@@ -73,16 +45,11 @@ public abstract class CompoundButtonPreference2<P extends CompoundButtonPreferen
     }
 
 
-    public static abstract class ItemViewBinderFactory<P extends CompoundButtonPreference2<P>>
-            extends ItemViewBinder.Factory<P, CommonViewHolder> {
-        @NonNull
-        @Override
-        public CommonViewHolder createViewHolder(@NonNull View itemView) {
-            return new CommonViewHolder(itemView);
-        }
+    public static abstract class ItemViewBinderFactory<P extends CompoundButtonPreference2<P>, VH extends RecyclerView.ViewHolder>
+            extends ItemViewBinder.Factory<P, VH> {
 
         @Override
-        public void onBindViewHolder(@NonNull final CommonViewHolder holder, final P preference, final int position) {
+        public void onBindViewHolder(@NonNull final VH holder, final P preference, final int position) {
             super.onBindViewHolder(holder, preference, position);
             setPreference(holder, preference);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -93,20 +60,28 @@ public abstract class CompoundButtonPreference2<P extends CompoundButtonPreferen
             });
         }
 
-        protected void doCallback(@NonNull final CommonViewHolder holder, final P preference, final int position) {
-            boolean oldChecked = preference.checked;
-            preference.setChecked(!preference.checked);
-            if (preference.callback.invoke(preference, position)) {
+
+        public void setPreference(@NonNull VH holder, @NonNull P preference) {
+            Preference2Helper.setPreference(holder, preference);
+            CompoundButton compoundButton;
+            if (holder instanceof CommonViewHolder) {
+                compoundButton = ((CommonViewHolder) holder).find(R.id.preference_compound_button);
+            } else {
+                compoundButton = holder.itemView.findViewById(R.id.preference_compound_button);
+            }
+            if (compoundButton != null) {
+                compoundButton.setChecked(preference.isChecked());
+            }
+        }
+
+        public void doCallback(@NonNull final VH holder, final P preference, final int position) {
+            boolean oldChecked = preference.isChecked();
+            preference.setChecked(!preference.isChecked());
+            if (preference.getCallback().invoke(preference, position)) {
                 setPreference(holder, preference);
             } else {
                 preference.setChecked(oldChecked);
             }
-        }
-
-        protected void setPreference(@NonNull CommonViewHolder holder, @NonNull P preference) {
-            holder.find(R.id.preference_title, TextView.class).setText(preference.getTitle());
-            holder.find(R.id.preference_summary, TextView.class).setText(preference.getSummary());
-            holder.find(R.id.preference_compound_button, CompoundButton.class).setChecked(preference.checked);
         }
     }
 
