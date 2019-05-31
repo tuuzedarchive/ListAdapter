@@ -137,9 +137,9 @@ class PreferenceFragment : Fragment() {
                 }
             }
             singleChoiceItems {
-                title = "SingleChoiceItems#NeedConfirm"
+                title = "SingleChoiceItems#WaitDismiss"
                 summary = "Summary"
-                isNeedConfirm = true
+                isWaitDismiss = true
                 itemsLoaderFunction = ItemsLoaderFunction { callback ->
                     callback((1..100).map { "SingleChoiceItem $it" })
                 }

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
@@ -170,8 +171,17 @@ public class EditTextPreference extends Preference2<EditTextPreference> {
             );
             final TextInputLayout textInputLayout = contentView.findViewById(R.id.textInputLayout);
             final TextInputEditText textInputEditText = contentView.findViewById(R.id.textInputEditText);
-            final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                    .setTitle(preference.getTitle())
+
+            AlertDialog.Builder builder = null;
+            try {
+                builder = new MaterialAlertDialogBuilder(context);
+            } catch (Exception e) {
+                // pass
+            }
+            if (builder == null) {
+                builder = new AlertDialog.Builder(context);
+            }
+            builder.setTitle(preference.getTitle())
                     .setView(contentView)
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -189,11 +199,13 @@ public class EditTextPreference extends Preference2<EditTextPreference> {
             }
             textInputEditText.setText(preference.getSummary());
             textInputEditText.setInputType(preference.getInputType());
+            textInputEditText.setHint(preference.getHint());
+            // 启用Counter
             if (preference.getMaxLength() != -1) {
                 textInputLayout.setCounterEnabled(true);
                 textInputLayout.setCounterMaxLength(preference.getMaxLength());
             }
-            textInputEditText.setHint(preference.getHint());
+            // 启用HelperText
             if (preference.getHelperText() != null) {
                 textInputLayout.setHelperTextEnabled(true);
                 textInputLayout.setHelperText(preference.getHelperText());
@@ -257,8 +269,8 @@ public class EditTextPreference extends Preference2<EditTextPreference> {
             }
             // 自定义验证
             if (preference.getTextValidator() != null) {
-                boolean pass = preference.getTextValidator().test(text, errorText);
-                if (pass) {
+                boolean testPass = preference.getTextValidator().test(text, errorText);
+                if (testPass) {
                     if (preference.getHelperText() != null) {
                         textInputLayout.setHelperTextEnabled(true);
                         textInputLayout.setHelperText(preference.getHelperText());
