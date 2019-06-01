@@ -12,7 +12,7 @@ import com.tuuzed.androidx.list.adapter.ListAdapter
 import com.tuuzed.androidx.list.preference.interfaces.ItemsLoaderFunction
 import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback
 import com.tuuzed.androidx.list.preference.Preferences
-import com.tuuzed.androidx.list.preference.interfaces.TextValidator
+import com.tuuzed.androidx.list.preference.interfaces.Validator
 import com.tuuzed.androidx.list.preference.ktx.*
 import com.tuuzed.androidx.listsample.R
 import com.tuuzed.androidx.listsample.common.ListItemDivider
@@ -108,7 +108,7 @@ class PreferenceFragment : Fragment() {
                 title = "EditView#Validator"
                 summary = "123456"
                 helperText = "输入数字"
-                textValidator = TextValidator { text, errorText ->
+                textValidator = Validator { text, errorText ->
                     Log.d(TAG, "textValidator: $text")
                     try {
                         text.toString().toInt()
@@ -137,9 +137,9 @@ class PreferenceFragment : Fragment() {
                 }
             }
             singleChoiceItems {
-                title = "SingleChoiceItems#NeedConfirm"
+                title = "SingleChoiceItems#WaitDismiss"
                 summary = "Summary"
-                isNeedConfirm = true
+                isWaitDismiss = true
                 itemsLoaderFunction = ItemsLoaderFunction { callback ->
                     callback((1..100).map { "SingleChoiceItem $it" })
                 }

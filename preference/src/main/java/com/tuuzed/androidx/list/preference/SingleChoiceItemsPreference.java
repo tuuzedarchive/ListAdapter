@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
@@ -33,7 +34,7 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
     @NonNull
     private PreferenceCallback<SingleChoiceItemsPreference> callback = Preferences.defaultPreferenceCallback();
     private boolean allowEmptySelection;
-    private boolean needConfirm;
+    private boolean waitDismiss;
 
     public SingleChoiceItemsPreference(@NonNull String title, @NonNull String summary) {
         super(title, summary);
@@ -93,13 +94,13 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
         return this;
     }
 
-    public boolean isNeedConfirm() {
-        return needConfirm;
+    public boolean isWaitDismiss() {
+        return waitDismiss;
     }
 
     @NonNull
-    public SingleChoiceItemsPreference setNeedConfirm(boolean needConfirm) {
-        this.needConfirm = needConfirm;
+    public SingleChoiceItemsPreference setWaitDismiss(boolean waitDismiss) {
+        this.waitDismiss = waitDismiss;
         return this;
     }
 
@@ -163,15 +164,22 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
                 }
             }
             final Button[] positiveButton = new Button[]{null};
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                    .setTitle(preference.getTitle())
+            AlertDialog.Builder builder = null;
+            try {
+                builder = new MaterialAlertDialogBuilder(context);
+            } catch (Exception e) {
+                // pass
+            }
+            if (builder == null) {
+                builder = new AlertDialog.Builder(context);
+            }
+            builder.setTitle(preference.getTitle())
                     .setSingleChoiceItems(displayItems, checkedItemIndex[0], new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             checkedItemIndex[0] = which;
                             // 需要再次确认
-                            if (preference.isNeedConfirm()) {
+                            if (preference.isWaitDismiss()) {
                                 onPreferenceChanged(positiveButton[0], preference, items, checkedItemIndex[0]);
                             }
                             // 不需要再次确认
@@ -181,7 +189,7 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
                             }
                         }
                     });
-            if (preference.isNeedConfirm()) {
+            if (preference.isWaitDismiss()) {
                 builder.setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -191,9 +199,6 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
                         });
             }
             final AlertDialog dialog = builder.create();
-            if (preference.isNeedConfirm()) {
-                dialog.setCanceledOnTouchOutside(true);
-            }
             dialog.show();
             positiveButton[0] = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             final Window window = dialog.getWindow();
@@ -230,7 +235,7 @@ public class SingleChoiceItemsPreference extends Preference2<SingleChoiceItemsPr
             Object oldCheckedItem = preference.getCheckedItem();
             // new
             Object newCheckedItem = null;
-            if (checkedItemIndex[0] > 0 && checkedItemIndex[0] < items.size()) {
+            if (checkedItemIndex[0] >= 0 && checkedItemIndex[0] < items.size()) {
                 newCheckedItem = items.get(checkedItemIndex[0]);
             }
             String newSummary = preference.getItemToStringFunction().invoke(newCheckedItem).toString();

@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-public interface TextValidator {
+public interface Validator<T> {
 
-    boolean test(@Nullable CharSequence text, @NonNull @Size(1) String[] errorText);
+    boolean test(@Nullable T input, @NonNull @Size(1) String[] errorText);
 
 }

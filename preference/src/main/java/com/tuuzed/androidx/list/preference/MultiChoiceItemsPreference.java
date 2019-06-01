@@ -9,6 +9,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.tuuzed.androidx.list.adapter.CommonViewHolder;
 import com.tuuzed.androidx.list.adapter.ItemViewBinder;
 import com.tuuzed.androidx.list.adapter.ListAdapter;
@@ -163,8 +164,16 @@ public class MultiChoiceItemsPreference extends Preference2<MultiChoiceItemsPref
                 checkedItemStatusArray[i] = preference.getCheckedItems().contains(item);
             }
             final Button[] positiveButton = new Button[]{null};
-            final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                    .setTitle(preference.getTitle())
+            AlertDialog.Builder builder = null;
+            try {
+                builder = new MaterialAlertDialogBuilder(context);
+            } catch (Exception e) {
+                // pass
+            }
+            if (builder == null) {
+                builder = new AlertDialog.Builder(context);
+            }
+            builder.setTitle(preference.getTitle())
                     .setMultiChoiceItems(displayItems, checkedItemStatusArray, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
