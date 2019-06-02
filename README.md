@@ -12,20 +12,21 @@ repositories {
 
 dependencies {
 
+    def list_version = 'latest.release'
     // adapter
-    implementation 'com.tuuzed.androidx.list:adapter:latest.release'
-    implementation 'com.tuuzed.androidx.list:adapter-ktx:latest.release'
+    implementation "com.tuuzed.androidx.list:adapter:$list_version"
+    implementation "com.tuuzed.androidx.list:adapter-ktx:$list_version"
     
     // loadmore
-    implementation 'com.tuuzed.androidx.list:loadmore:latest.release'
-    implementation 'com.tuuzed.androidx.list:loadmore-ktx:latest.release'
+    implementation "com.tuuzed.androidx.list:loadmore:$list_version"
+    implementation "com.tuuzed.androidx.list:loadmore-ktx:$list_version"
     
     // pageable
-    implementation 'com.tuuzed.androidx.list:pageable:latest.release'
+    implementation "com.tuuzed.androidx.list:pageable:$list_version"
     
     // preference
-    implementation 'com.tuuzed.androidx.list:preference:latest.release'
-    implementation 'com.tuuzed.androidx.list:preference-ktx:latest.release'
-    
+    implementation "com.tuuzed.androidx.list:preference:$list_version"
+    implementation "com.tuuzed.androidx.list:preference-ktx:$list_version"
+   
 }
 ```
