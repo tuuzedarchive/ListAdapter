@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.tuuzed.androidx.list.adapter.ListAdapter
+import com.tuuzed.androidx.list.adapter.ListItemDivider
 import com.tuuzed.androidx.list.adapter.ktx.bindType
 import com.tuuzed.androidx.list.adapter.ktx.withView
 import com.tuuzed.androidx.list.loadmore.LoadMoreController
@@ -20,7 +21,6 @@ import com.tuuzed.androidx.list.loadmore.ktx.useLoadMore
 import com.tuuzed.androidx.list.pageable.PagedList
 import com.tuuzed.androidx.list.pageable.PagedListDataFetcher
 import com.tuuzed.androidx.listsample.R
-import com.tuuzed.androidx.listsample.common.ListItemDivider
 import com.tuuzed.androidx.listsample.model.NameItem
 import kotlinx.android.synthetic.main.pageable_fragment.*
 import java.util.*
@@ -36,8 +36,9 @@ class PageableFragment : Fragment() {
     private val mainHandler = Handler(Looper.getMainLooper())
 
     private val loadMoreController = LoadMoreController()
-    private val pagedListDataFetcher = object : PagedListDataFetcher<Any>(1, 5) {
-
+    private val pagedListDataFetcher = object : PagedListDataFetcher<Any>(
+        1, 5
+    ) {
         override fun onFetchListData(page: Int, pageSize: Int, fetchFunction: FetchFunction<Any>) {
             Log.d("MainActivity", "onFetchListData: page=$page,pageSize=$pageSize")
             mainHandler.postDelayed({
@@ -103,7 +104,12 @@ class PageableFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = listAdapter
-        recyclerView.addItemDecoration(ListItemDivider(requireContext()))
+        recyclerView.addItemDecoration(
+            ListItemDivider.builder()
+                .setPaddingStart(8)
+                .setPaddingEnd(8)
+                .build(requireContext())
+        )
 
         swipeRefreshLayout.setOnRefreshListener {
             if (pagedListDataFetcher.isFetching) {

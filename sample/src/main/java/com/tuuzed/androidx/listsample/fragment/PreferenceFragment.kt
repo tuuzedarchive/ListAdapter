@@ -2,44 +2,36 @@ package com.tuuzed.androidx.listsample.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.tuuzed.androidx.list.adapter.ListAdapter
+import com.tuuzed.androidx.list.adapter.ListItemDivider
+import com.tuuzed.androidx.list.preference.Preferences
 import com.tuuzed.androidx.list.preference.interfaces.ItemsLoaderFunction
 import com.tuuzed.androidx.list.preference.interfaces.PreferenceCallback
-import com.tuuzed.androidx.list.preference.Preferences
 import com.tuuzed.androidx.list.preference.interfaces.Validator
 import com.tuuzed.androidx.list.preference.ktx.*
-import com.tuuzed.androidx.listsample.R
-import com.tuuzed.androidx.listsample.common.ListItemDivider
 import kotlinx.android.synthetic.main.pageable_fragment.*
-import java.util.*
 
-class PreferenceFragment : Fragment() {
+class PreferenceFragment : BaseListFragment() {
 
     companion object {
         private const val TAG = "PreferenceFragment"
         fun newInstance() = PreferenceFragment()
     }
 
-    private lateinit var listAdapter: ListAdapter
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.preference_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listAdapter = ListAdapter(LinkedList<Any>())
         Preferences.bindAllTo(listAdapter)
-
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = listAdapter
-        recyclerView.addItemDecoration(ListItemDivider(requireContext()))
+        recyclerView.addItemDecoration(
+            ListItemDivider.builder()
+                .setPaddingStart(8)
+                .setPaddingEnd(8)
+                .build(requireContext())
+        )
         withPreferences(listAdapter) {
             category { title = "Category" }
             general {

@@ -8,19 +8,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import com.tuuzed.androidx.listsample.fragment.HorizontalListFragment
 import com.tuuzed.androidx.listsample.fragment.PageableFragment
 import com.tuuzed.androidx.listsample.fragment.PreferenceFragment
+import com.tuuzed.androidx.listsample.fragment.VerticalListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private val fragments = listOf(
         lazy { PageableFragment.newInstance() },
-        lazy { PreferenceFragment.newInstance() }
+        lazy { PreferenceFragment.newInstance() },
+        lazy { VerticalListFragment.newInstance() },
+        lazy { HorizontalListFragment.newInstance() }
     )
     private val titles = listOf(
         "Pageable",
-        "Preference"
+        "Preference",
+        "Vertical List",
+        "Horizontal List"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,20 +63,16 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_change_theme -> {
-                val drak = getSharedPreferences("theme", Context.MODE_PRIVATE).getBoolean("dark", false)
+                val dark = getSharedPreferences("theme", Context.MODE_PRIVATE).getBoolean("dark", false)
                 getSharedPreferences("theme", Context.MODE_PRIVATE).edit {
-                    putBoolean("dark", !drak)
+                    putBoolean("dark", !dark)
                 }
                 restartActivity()
                 true
@@ -80,8 +82,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun restartActivity() {
-        recreate()
-    }
+    private fun restartActivity() = recreate()
 
 }

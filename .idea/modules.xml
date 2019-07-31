@@ -3,23 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ListAdapter.iml" filepath="$PROJECT_DIR$/.idea/ListAdapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/ListAdapter.iml" filepath="$PROJECT_DIR$/.idea/ListAdapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/ListAdapter.iml" filepath="$PROJECT_DIR$/ListAdapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/adapter/adapter.iml" filepath="$PROJECT_DIR$/adapter/adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/adapter/adapter.iml" filepath="$PROJECT_DIR$/adapter/adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" filepath="$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" />
       <module fileurl="file://$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" filepath="$PROJECT_DIR$/adapter-ktx/adapter-ktx.iml" />
       <module fileurl="file://$PROJECT_DIR$/loadmore/loadmore.iml" filepath="$PROJECT_DIR$/loadmore/loadmore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/loadmore/loadmore.iml" filepath="$PROJECT_DIR$/loadmore/loadmore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/loadmore-ktx/loadmore-ktx.iml" filepath="$PROJECT_DIR$/loadmore-ktx/loadmore-ktx.iml" />
       <module fileurl="file://$PROJECT_DIR$/loadmore-ktx/loadmore-ktx.iml" filepath="$PROJECT_DIR$/loadmore-ktx/loadmore-ktx.iml" />
       <module fileurl="file://$PROJECT_DIR$/pageable/pageable.iml" filepath="$PROJECT_DIR$/pageable/pageable.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pageable/pageable.iml" filepath="$PROJECT_DIR$/pageable/pageable.iml" />
-      <module fileurl="file://$PROJECT_DIR$/preference/preference.iml" filepath="$PROJECT_DIR$/preference/preference.iml" />
       <module fileurl="file://$PROJECT_DIR$/preference/preference.iml" filepath="$PROJECT_DIR$/preference/preference.iml" />
       <module fileurl="file://$PROJECT_DIR$/preference-ktx/preference-ktx.iml" filepath="$PROJECT_DIR$/preference-ktx/preference-ktx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/preference-ktx/preference-ktx.iml" filepath="$PROJECT_DIR$/preference-ktx/preference-ktx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>
